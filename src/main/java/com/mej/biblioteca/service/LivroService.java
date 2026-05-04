@@ -1,0 +1,149 @@
+package com.mej.biblioteca.service;
+
+import com.mej.biblioteca.dto.LivroCatalogoResponse;
+import com.mej.biblioteca.dto.LivroOcultarRequest;
+import com.mej.biblioteca.dto.LivroRequest;
+import com.mej.biblioteca.dto.LivroResponse;
+import com.mej.biblioteca.exception.BusinessException;
+import com.mej.biblioteca.exception.NotFoundException;
+import com.mej.biblioteca.model.Livro;
+import com.mej.biblioteca.model.Role;
+import com.mej.biblioteca.model.StatusEmprestimo;
+import com.mej.biblioteca.model.Usuario;
+import com.mej.biblioteca.repository.EmprestimoRepository;
+import com.mej.biblioteca.repository.LivroRepository;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+public class LivroService {
+
+    private static final List<StatusEmprestimo> STATUS_COM_LIVRO_FORA = List.of(StatusEmprestimo.EMPRESTADO, StatusEmprestimo.ATRASADO);
+
+    private final LivroRepository livroRepository;
+    private final EmprestimoRepository emprestimoRepository;
+    private final UsuarioService usuarioService;
+
+    @Transactional(readOnly = true)
+    public List<?> listar(Authentication authentication) {
+        if (isAdmin(authentication)) {
+            return livroRepository.findAll()
+                    .stream()
+                    .map(LivroResponse::from)
+                    .toList();
+        }
+
+        return livroRepository.findByOcultoFalse()
+                .stream()
+                .map(LivroCatalogoResponse::from)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public Object buscar(Long id, Authentication authentication) {
+        Livro livro = buscarEntidade(id);
+        if (isAdmin(authentication)) {
+            return LivroResponse.from(livro);
+        }
+        if (livro.getOculto()) {
+            throw new NotFoundException("Livro nao encontrado.");
+        }
+        return LivroCatalogoResponse.from(livro);
+    }
+
+    @Transactional
+    public LivroResponse criar(LivroRequest request, Authentication authentication) {
+        Usuario admin = usuarioService.usuarioAutenticado(authentication);
+        validarLivroDuplicado(request, null);
+        Livro livro = Livro.builder()
+                .nomeObra(request.nomeObra())
+                .autor(request.autor())
+                .editora(request.editora())
+                .volume(request.volume())
+                .descricao(request.descricao())
+                .categorias(request.categorias())
+                .quantidade(request.quantidade())
+                .fotoCapaUrl(request.fotoCapaUrl())
+                .oculto(false)
+                .criadoPor(admin)
+                .build();
+        return LivroResponse.from(livroRepository.save(livro));
+    }
+
+    @Transactional
+    public LivroResponse atualizar(Long id, LivroRequest request, Authentication authentication) {
+        Usuario admin = usuarioService.usuarioAutenticado(authentication);
+        Livro livro = buscarEntidade(id);
+        validarLivroDuplicado(request, id);
+        livro.setNomeObra(request.nomeObra());
+        livro.setAutor(request.autor());
+        livro.setEditora(request.editora());
+        livro.setVolume(request.volume());
+        livro.setDescricao(request.descricao());
+        livro.setCategorias(request.categorias());
+        livro.setQuantidade(request.quantidade());
+        livro.setFotoCapaUrl(request.fotoCapaUrl());
+        livro.setEditadoPor(admin);
+        return LivroResponse.from(livro);
+    }
+
+    @Transactional
+    public void remover(Long id) {
+        Livro livro = buscarEntidade(id);
+        if (emprestimoRepository.existsByLivroIdAndStatusIn(id, STATUS_COM_LIVRO_FORA)) {
+            throw new BusinessException("Nao e permitido remover livro que esteja emprestado.");
+        }
+        livroRepository.delete(livro);
+    }
+
+    @Transactional
+    public LivroResponse ocultar(Long id, LivroOcultarRequest request, Authentication authentication) {
+        Usuario admin = usuarioService.usuarioAutenticado(authentication);
+        Livro livro = buscarEntidade(id);
+        livro.setOculto(true);
+        livro.setMotivoOcultacao(request.motivoOcultacao());
+        livro.setEditadoPor(admin);
+        return LivroResponse.from(livro);
+    }
+
+    @Transactional
+    public LivroResponse disponibilizar(Long id, Authentication authentication) {
+        Usuario admin = usuarioService.usuarioAutenticado(authentication);
+        Livro livro = buscarEntidade(id);
+        livro.setOculto(false);
+        livro.setMotivoOcultacao(null);
+        livro.setEditadoPor(admin);
+        return LivroResponse.from(livro);
+    }
+
+    @Transactional(readOnly = true)
+    public Livro buscarEntidade(Long id) {
+        return livroRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Livro nao encontrado."));
+    }
+
+    private boolean isAdmin(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return false;
+        }
+        return authentication.getAuthorities()
+                .stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_" + Role.ADMIN.name()));
+    }
+
+    private void validarLivroDuplicado(LivroRequest request, Long idAtual) {
+        boolean duplicado = idAtual == null
+                ? livroRepository.existsDuplicado(
+                request.nomeObra(), request.autor(), request.editora(), request.volume())
+                : livroRepository.existsDuplicadoEmOutroLivro(
+                request.nomeObra(), request.autor(), request.editora(), request.volume(), idAtual);
+
+        if (duplicado) {
+            throw new BusinessException("Ja existe livro cadastrado com mesma obra, autor, editora e volume.");
+        }
+    }
+}
