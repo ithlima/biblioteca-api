@@ -4,12 +4,13 @@ import com.mej.biblioteca.model.Emprestimo;
 import com.mej.biblioteca.model.StatusEmprestimo;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record EmprestimoResponse(
-        Long id,
-        Long livroId,
+        UUID id,
+        UUID livroId,
         String nomeObra,
-        Long leitorId,
+        UUID leitorId,
         String nomeLeitor,
         LocalDateTime dataPedido,
         LocalDate dataEmprestimo,

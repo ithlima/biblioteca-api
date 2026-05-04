@@ -2,9 +2,10 @@ package com.mej.biblioteca.dto;
 
 import com.mej.biblioteca.model.Livro;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record LivroResponse(
-        Long id,
+        UUID id,
         String nomeObra,
         String autor,
         String editora,
@@ -15,8 +16,8 @@ public record LivroResponse(
         String fotoCapaUrl,
         Boolean oculto,
         String motivoOcultacao,
-        Long criadoPorId,
-        Long editadoPorId,
+        UUID criadoPorId,
+        UUID editadoPorId,
         LocalDateTime criadoEm,
         LocalDateTime editadoEm
 ) {

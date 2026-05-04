@@ -13,6 +13,7 @@ import com.mej.biblioteca.repository.EmprestimoRepository;
 import com.mej.biblioteca.repository.PenalidadeRepository;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -66,7 +67,7 @@ public class EmprestimoService {
     }
 
     @Transactional
-    public EmprestimoResponse emprestar(Long id) {
+    public EmprestimoResponse emprestar(UUID id) {
         Emprestimo emprestimo = buscarEntidade(id);
         if (emprestimo.getStatus() != StatusEmprestimo.SOLICITADO) {
             throw new BusinessException("Somente solicitacoes pendentes podem ser emprestadas.");
@@ -88,7 +89,7 @@ public class EmprestimoService {
     }
 
     @Transactional
-    public EmprestimoResponse renovar(Long id, Authentication authentication) {
+    public EmprestimoResponse renovar(UUID id, Authentication authentication) {
         Emprestimo emprestimo = buscarEntidade(id);
         Usuario usuario = usuarioService.usuarioAutenticado(authentication);
         validarDonoOuAdmin(emprestimo, usuario);
@@ -109,7 +110,7 @@ public class EmprestimoService {
     }
 
     @Transactional
-    public EmprestimoResponse devolver(Long id, Authentication authentication) {
+    public EmprestimoResponse devolver(UUID id, Authentication authentication) {
         Emprestimo emprestimo = buscarEntidade(id);
         Usuario usuario = usuarioService.usuarioAutenticado(authentication);
         validarDonoOuAdmin(emprestimo, usuario);
@@ -166,7 +167,7 @@ public class EmprestimoService {
                 });
     }
 
-    private Emprestimo buscarEntidade(Long id) {
+    private Emprestimo buscarEntidade(UUID id) {
         return emprestimoRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Emprestimo nao encontrado."));
     }

@@ -1,9 +1,10 @@
 package com.mej.biblioteca.dto;
 
 import com.mej.biblioteca.model.Role;
+import java.util.UUID;
 
 public record AuthResponse(
-        Long id,
+        UUID id,
         String nomeCompleto,
         String email,
         String telefoneWhatsapp,

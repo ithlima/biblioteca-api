@@ -13,6 +13,7 @@ import com.mej.biblioteca.model.Usuario;
 import com.mej.biblioteca.repository.EmprestimoRepository;
 import com.mej.biblioteca.repository.LivroRepository;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class LivroService {
     }
 
     @Transactional(readOnly = true)
-    public Object buscar(Long id, Authentication authentication) {
+    public Object buscar(UUID id, Authentication authentication) {
         Livro livro = buscarEntidade(id);
         if (isAdmin(authentication)) {
             return LivroResponse.from(livro);
@@ -75,7 +76,7 @@ public class LivroService {
     }
 
     @Transactional
-    public LivroResponse atualizar(Long id, LivroRequest request, Authentication authentication) {
+    public LivroResponse atualizar(UUID id, LivroRequest request, Authentication authentication) {
         Usuario admin = usuarioService.usuarioAutenticado(authentication);
         Livro livro = buscarEntidade(id);
         validarLivroDuplicado(request, id);
@@ -92,7 +93,7 @@ public class LivroService {
     }
 
     @Transactional
-    public void remover(Long id) {
+    public void remover(UUID id) {
         Livro livro = buscarEntidade(id);
         if (emprestimoRepository.existsByLivroIdAndStatusIn(id, STATUS_COM_LIVRO_FORA)) {
             throw new BusinessException("Nao e permitido remover livro que esteja emprestado.");
@@ -101,7 +102,7 @@ public class LivroService {
     }
 
     @Transactional
-    public LivroResponse ocultar(Long id, LivroOcultarRequest request, Authentication authentication) {
+    public LivroResponse ocultar(UUID id, LivroOcultarRequest request, Authentication authentication) {
         Usuario admin = usuarioService.usuarioAutenticado(authentication);
         Livro livro = buscarEntidade(id);
         livro.setOculto(true);
@@ -111,7 +112,7 @@ public class LivroService {
     }
 
     @Transactional
-    public LivroResponse disponibilizar(Long id, Authentication authentication) {
+    public LivroResponse disponibilizar(UUID id, Authentication authentication) {
         Usuario admin = usuarioService.usuarioAutenticado(authentication);
         Livro livro = buscarEntidade(id);
         livro.setOculto(false);
@@ -121,7 +122,7 @@ public class LivroService {
     }
 
     @Transactional(readOnly = true)
-    public Livro buscarEntidade(Long id) {
+    public Livro buscarEntidade(UUID id) {
         return livroRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Livro nao encontrado."));
     }
@@ -135,7 +136,7 @@ public class LivroService {
                 .anyMatch(authority -> authority.getAuthority().equals("ROLE_" + Role.ADMIN.name()));
     }
 
-    private void validarLivroDuplicado(LivroRequest request, Long idAtual) {
+    private void validarLivroDuplicado(LivroRequest request, UUID idAtual) {
         boolean duplicado = idAtual == null
                 ? livroRepository.existsDuplicado(
                 request.nomeObra(), request.autor(), request.editora(), request.volume())

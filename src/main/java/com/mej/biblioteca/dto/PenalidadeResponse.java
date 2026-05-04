@@ -2,12 +2,13 @@ package com.mej.biblioteca.dto;
 
 import com.mej.biblioteca.model.Penalidade;
 import java.time.LocalDate;
+import java.util.UUID;
 
 public record PenalidadeResponse(
-        Long id,
-        Long usuarioId,
+        UUID id,
+        UUID usuarioId,
         String nomeUsuario,
-        Long emprestimoId,
+        UUID emprestimoId,
         String motivo,
         LocalDate dataInicio,
         LocalDate dataFim,

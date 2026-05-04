@@ -6,6 +6,7 @@ import com.mej.biblioteca.dto.LivroResponse;
 import com.mej.biblioteca.service.LivroService;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -33,7 +34,7 @@ public class LivroController {
     }
 
     @GetMapping("/{id}")
-    public Object buscar(@PathVariable Long id, Authentication authentication) {
+    public Object buscar(@PathVariable UUID id, Authentication authentication) {
         return livroService.buscar(id, authentication);
     }
 
@@ -44,23 +45,23 @@ public class LivroController {
     }
 
     @PutMapping("/{id}")
-    public LivroResponse atualizar(@PathVariable Long id, @RequestBody @Valid LivroRequest request, Authentication authentication) {
+    public LivroResponse atualizar(@PathVariable UUID id, @RequestBody @Valid LivroRequest request, Authentication authentication) {
         return livroService.atualizar(id, request, authentication);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void remover(@PathVariable Long id) {
+    public void remover(@PathVariable UUID id) {
         livroService.remover(id);
     }
 
     @PatchMapping("/{id}/ocultar")
-    public LivroResponse ocultar(@PathVariable Long id, @RequestBody @Valid LivroOcultarRequest request, Authentication authentication) {
+    public LivroResponse ocultar(@PathVariable UUID id, @RequestBody @Valid LivroOcultarRequest request, Authentication authentication) {
         return livroService.ocultar(id, request, authentication);
     }
 
     @PatchMapping("/{id}/disponibilizar")
-    public LivroResponse disponibilizar(@PathVariable Long id, Authentication authentication) {
+    public LivroResponse disponibilizar(@PathVariable UUID id, Authentication authentication) {
         return livroService.disponibilizar(id, authentication);
     }
 }

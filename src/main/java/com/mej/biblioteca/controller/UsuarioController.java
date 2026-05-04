@@ -3,6 +3,7 @@ package com.mej.biblioteca.controller;
 import com.mej.biblioteca.dto.UsuarioResponse;
 import com.mej.biblioteca.service.UsuarioService;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -23,17 +24,17 @@ public class UsuarioController {
     }
 
     @PatchMapping("/{id}/promover-admin")
-    public UsuarioResponse promoverAdmin(@PathVariable Long id) {
+    public UsuarioResponse promoverAdmin(@PathVariable UUID id) {
         return usuarioService.promoverAdmin(id);
     }
 
     @PatchMapping("/{id}/rebaixar-leitor")
-    public UsuarioResponse rebaixarLeitor(@PathVariable Long id) {
+    public UsuarioResponse rebaixarLeitor(@PathVariable UUID id) {
         return usuarioService.rebaixarLeitor(id);
     }
 
     @PatchMapping("/{id}/bloquear")
-    public UsuarioResponse bloquear(@PathVariable Long id) {
+    public UsuarioResponse bloquear(@PathVariable UUID id) {
         return usuarioService.bloquear(id);
     }
 }

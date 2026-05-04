@@ -5,6 +5,7 @@ import com.mej.biblioteca.dto.EmprestimoSolicitarRequest;
 import com.mej.biblioteca.service.EmprestimoService;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,17 +34,17 @@ public class EmprestimoController {
 
     @PostMapping("/{id}/emprestar")
     @PreAuthorize("hasRole('ADMIN')")
-    public EmprestimoResponse emprestar(@PathVariable Long id) {
+    public EmprestimoResponse emprestar(@PathVariable UUID id) {
         return emprestimoService.emprestar(id);
     }
 
     @PatchMapping("/{id}/renovar")
-    public EmprestimoResponse renovar(@PathVariable Long id, Authentication authentication) {
+    public EmprestimoResponse renovar(@PathVariable UUID id, Authentication authentication) {
         return emprestimoService.renovar(id, authentication);
     }
 
     @PatchMapping("/{id}/devolver")
-    public EmprestimoResponse devolver(@PathVariable Long id, Authentication authentication) {
+    public EmprestimoResponse devolver(@PathVariable UUID id, Authentication authentication) {
         return emprestimoService.devolver(id, authentication);
     }
 

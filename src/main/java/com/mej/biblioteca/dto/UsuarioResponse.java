@@ -3,9 +3,10 @@ package com.mej.biblioteca.dto;
 import com.mej.biblioteca.model.Role;
 import com.mej.biblioteca.model.Usuario;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record UsuarioResponse(
-        Long id,
+        UUID id,
         String nomeCompleto,
         String email,
         String telefoneWhatsapp,

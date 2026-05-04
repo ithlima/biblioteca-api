@@ -1,9 +1,10 @@
 package com.mej.biblioteca.dto;
 
 import com.mej.biblioteca.model.Livro;
+import java.util.UUID;
 
 public record LivroCatalogoResponse(
-        Long id,
+        UUID id,
         String nomeObra,
         String autor,
         String editora,

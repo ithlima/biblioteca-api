@@ -6,6 +6,7 @@ import com.mej.biblioteca.model.Role;
 import com.mej.biblioteca.model.Usuario;
 import com.mej.biblioteca.repository.UsuarioRepository;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -37,27 +38,27 @@ public class UsuarioService {
     }
 
     @Transactional
-    public UsuarioResponse promoverAdmin(Long id) {
+    public UsuarioResponse promoverAdmin(UUID id) {
         Usuario usuario = buscarPorId(id);
         usuario.setRole(Role.ADMIN);
         return UsuarioResponse.from(usuario);
     }
 
     @Transactional
-    public UsuarioResponse rebaixarLeitor(Long id) {
+    public UsuarioResponse rebaixarLeitor(UUID id) {
         Usuario usuario = buscarPorId(id);
         usuario.setRole(Role.LEITOR);
         return UsuarioResponse.from(usuario);
     }
 
     @Transactional
-    public UsuarioResponse bloquear(Long id) {
+    public UsuarioResponse bloquear(UUID id) {
         Usuario usuario = buscarPorId(id);
         usuario.setLoginBloqueado(true);
         return UsuarioResponse.from(usuario);
     }
 
-    private Usuario buscarPorId(Long id) {
+    private Usuario buscarPorId(UUID id) {
         return usuarioRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Usuario nao encontrado."));
     }
