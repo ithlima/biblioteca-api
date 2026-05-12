@@ -18,7 +18,7 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("Biblioteca MEJ API")
-                        .description("API para gerenciamento do catálogo, usuários e empréstimos da biblioteca do Movimento Eucarístico Jovem.")
+                        .description("API para gerenciamento do catalogo, usuarios, emprestimos, validacao de cadastro por e-mail e alteracao de senha por codigo.")
                         .version("1.0.0"))
                 .components(new Components()
                         .addSecuritySchemes(BEARER_AUTH, new SecurityScheme()

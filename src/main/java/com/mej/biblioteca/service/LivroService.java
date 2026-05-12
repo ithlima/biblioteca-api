@@ -98,6 +98,9 @@ public class LivroService {
         if (emprestimoRepository.existsByLivroIdAndStatusIn(id, STATUS_COM_LIVRO_FORA)) {
             throw new BusinessException("Nao e permitido remover livro que esteja emprestado.");
         }
+        if (emprestimoRepository.existsByLivroId(id)) {
+            throw new BusinessException("Nao e permitido remover livro com historico de emprestimos.");
+        }
         livroRepository.delete(livro);
     }
 

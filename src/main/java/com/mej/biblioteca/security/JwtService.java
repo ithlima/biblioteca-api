@@ -1,6 +1,7 @@
 package com.mej.biblioteca.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.io.DecodingException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -72,7 +73,7 @@ public class JwtService {
     private byte[] obterBytesDaChave() {
         try {
             return Decoders.BASE64.decode(secret);
-        } catch (IllegalArgumentException ex) {
+        } catch (DecodingException | IllegalArgumentException ex) {
             return secret.getBytes(StandardCharsets.UTF_8);
         }
     }

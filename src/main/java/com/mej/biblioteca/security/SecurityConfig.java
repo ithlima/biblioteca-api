@@ -33,7 +33,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/cadastro", "/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/cadastro", "/auth/cadastro/confirmar", "/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/senha/solicitar-alteracao", "/auth/senha/confirmar-alteracao").permitAll()
                         .requestMatchers(HttpMethod.GET, "/livros", "/livros/{id}").permitAll()
                         .requestMatchers(HttpMethod.POST, "/livros").hasRole(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.PUT, "/livros/{id}").hasRole(Role.ADMIN.name())

@@ -13,6 +13,7 @@ public record UsuarioResponse(
         Role role,
         Boolean ativo,
         Boolean loginBloqueado,
+        Boolean emailValidado,
         LocalDateTime criadoEm
 ) {
     public static UsuarioResponse from(Usuario usuario) {
@@ -24,6 +25,7 @@ public record UsuarioResponse(
                 usuario.getRole(),
                 usuario.getAtivo(),
                 usuario.getLoginBloqueado(),
+                usuario.getEmailValidado(),
                 usuario.getCriadoEm()
         );
     }

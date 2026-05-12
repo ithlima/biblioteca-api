@@ -12,6 +12,8 @@ public interface EmprestimoRepository extends JpaRepository<Emprestimo, UUID> {
 
     boolean existsByLeitorAndStatusIn(Usuario leitor, Collection<StatusEmprestimo> status);
 
+    boolean existsByLivroId(UUID livroId);
+
     boolean existsByLivroIdAndStatusIn(UUID livroId, Collection<StatusEmprestimo> status);
 
     List<Emprestimo> findByLeitorOrderByDataPedidoDesc(Usuario leitor);

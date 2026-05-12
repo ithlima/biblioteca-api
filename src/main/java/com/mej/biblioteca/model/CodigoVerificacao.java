@@ -23,55 +23,33 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "usuarios")
-public class Usuario {
+@Table(name = "codigos_verificacao")
+public class CodigoVerificacao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(nullable = false, length = 150)
-    private String nomeCompleto;
-
-    @Column(nullable = false, unique = true, length = 150)
     private String email;
 
-    @Column(length = 20)
-    private String telefoneWhatsapp;
-
     @Column(nullable = false)
-    private String senha;
+    private String codigoHash;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private Role role;
+    @Column(nullable = false, length = 30)
+    private TipoCodigoVerificacao tipo;
 
     @Column(nullable = false)
-    private Boolean ativo;
-
-    @Column(nullable = false)
-    private Boolean loginBloqueado;
-
-    @Column(nullable = false)
-    private Boolean emailValidado;
+    private LocalDateTime expiraEm;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime criadoEm;
 
+    private LocalDateTime usadoEm;
+
     @PrePersist
     void prePersist() {
-        if (role == null) {
-            role = Role.LEITOR;
-        }
-        if (ativo == null) {
-            ativo = true;
-        }
-        if (loginBloqueado == null) {
-            loginBloqueado = false;
-        }
-        if (emailValidado == null) {
-            emailValidado = false;
-        }
         if (criadoEm == null) {
             criadoEm = LocalDateTime.now();
         }
