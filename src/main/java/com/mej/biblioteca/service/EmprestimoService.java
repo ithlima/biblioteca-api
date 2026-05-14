@@ -25,7 +25,7 @@ public class EmprestimoService {
 
     private static final int PRAZO_EMPRESTIMO_DIAS = 15;
     private static final int PRAZO_PENALIDADE_DIAS = 7;
-    private static final String MOTIVO_ATRASO = "Atraso na devolução do livro";
+    private static final String MOTIVO_ATRASO = "Atraso na devolucao do livro";
     private static final int LIMITE_RENOVACOES = 5;
     private static final List<StatusEmprestimo> STATUS_ATIVOS = List.of(
             StatusEmprestimo.SOLICITADO,
@@ -50,7 +50,7 @@ public class EmprestimoService {
             throw new BusinessException("Leitor ja possui emprestimo ativo.");
         }
         if (temPenalidadeAtiva(leitor)) {
-            throw new BusinessException("Leitor possui penalidade ativa e não pode solicitar empréstimos.");
+            throw new BusinessException("Leitor possui penalidade ativa e nao pode solicitar emprestimos.");
         }
         if (livro.getQuantidade() <= 0) {
             throw new BusinessException("Livro sem quantidade disponivel.");

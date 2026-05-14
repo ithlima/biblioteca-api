@@ -1,7 +1,6 @@
 package com.mej.biblioteca.service;
 
 import com.mej.biblioteca.dto.PenalidadeResponse;
-import com.mej.biblioteca.model.Penalidade;
 import com.mej.biblioteca.model.Usuario;
 import com.mej.biblioteca.repository.PenalidadeRepository;
 import java.time.LocalDate;
