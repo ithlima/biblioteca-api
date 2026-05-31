@@ -52,12 +52,12 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioResponse rebaixarLeitor(UUID id) {
-        List<Usuario> administradores = usuarioRepository.findAllByRoleForUpdate(Role.ADMIN);
+        List<Usuario> administradoresAtivos = usuarioRepository.findAllAtivosByRoleForUpdate(Role.ADMIN);
         Usuario usuario = buscarPorId(id);
         if (usuario.getRole() == Role.LEITOR) {
             throw new AlteracaoRoleNaoPermitidaException("Usuário já possui role LEITOR.");
         }
-        if (administradores.size() <= 1) {
+        if (administradorAtivo(usuario) && administradoresAtivos.size() <= 1) {
             throw new UltimoAdministradorException();
         }
         usuario.setRole(Role.LEITOR);
@@ -75,9 +75,19 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioResponse bloquear(UUID id) {
+        List<Usuario> administradoresAtivos = usuarioRepository.findAllAtivosByRoleForUpdate(Role.ADMIN);
         Usuario usuario = buscarPorId(id);
+        if (administradorAtivo(usuario) && administradoresAtivos.size() <= 1) {
+            throw new UltimoAdministradorException();
+        }
         usuario.setLoginBloqueado(true);
         return UsuarioResponse.from(usuario);
+    }
+
+    private boolean administradorAtivo(Usuario usuario) {
+        return usuario.getRole() == Role.ADMIN
+                && Boolean.TRUE.equals(usuario.getAtivo())
+                && !Boolean.TRUE.equals(usuario.getLoginBloqueado());
     }
 
     private Usuario buscarPorId(UUID id) {

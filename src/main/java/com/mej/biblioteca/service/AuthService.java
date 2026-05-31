@@ -5,6 +5,7 @@ import com.mej.biblioteca.dto.AuthResponse;
 import com.mej.biblioteca.dto.ConfirmarAlteracaoSenhaRequest;
 import com.mej.biblioteca.dto.ConfirmarCadastroRequest;
 import com.mej.biblioteca.dto.LoginRequest;
+import com.mej.biblioteca.dto.ReenviarCodigoRequest;
 import com.mej.biblioteca.dto.SolicitarAlteracaoSenhaRequest;
 import com.mej.biblioteca.exception.ConflictException;
 import com.mej.biblioteca.exception.UsuarioNotFoundException;
@@ -70,6 +71,17 @@ public class AuthService {
         usuario.setAtivo(true);
         usuario.setLoginBloqueado(false);
         return toAuthResponse(usuario);
+    }
+
+    @Transactional
+    public void reenviarCodigo(ReenviarCodigoRequest request) {
+        String email = normalizarEmail(request.email());
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(UsuarioNotFoundException::new);
+        if (Boolean.TRUE.equals(usuario.getEmailValidado())) {
+            throw new ConflictException("Usuário já está confirmado.");
+        }
+        codigoVerificacaoService.gerarEEnviar(email, TipoCodigoVerificacao.CADASTRO);
     }
 
     @Transactional(readOnly = true)

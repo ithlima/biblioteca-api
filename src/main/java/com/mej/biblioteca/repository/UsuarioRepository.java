@@ -24,6 +24,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
     boolean existsByRole(Role role);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("select u from Usuario u where u.role = :role order by u.id")
-    List<Usuario> findAllByRoleForUpdate(@Param("role") Role role);
+    @Query("""
+            select u from Usuario u
+            where u.role = :role and u.ativo = true and u.loginBloqueado = false
+            order by u.id
+            """)
+    List<Usuario> findAllAtivosByRoleForUpdate(@Param("role") Role role);
 }

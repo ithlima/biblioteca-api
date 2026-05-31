@@ -5,8 +5,10 @@ import com.mej.biblioteca.dto.AuthResponse;
 import com.mej.biblioteca.dto.ConfirmarAlteracaoSenhaRequest;
 import com.mej.biblioteca.dto.ConfirmarCadastroRequest;
 import com.mej.biblioteca.dto.LoginRequest;
+import com.mej.biblioteca.dto.ReenviarCodigoRequest;
 import com.mej.biblioteca.dto.SolicitarAlteracaoSenhaRequest;
 import com.mej.biblioteca.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,13 @@ public class AuthController {
     @PostMapping("/cadastro/confirmar")
     public AuthResponse confirmarCadastro(@RequestBody @Valid ConfirmarCadastroRequest request) {
         return authService.confirmarCadastro(request);
+    }
+
+    @PostMapping("/reenviar-codigo")
+    @Operation(summary = "Reenviar código de verificação do cadastro")
+    public Map<String, String> reenviarCodigo(@RequestBody @Valid ReenviarCodigoRequest request) {
+        authService.reenviarCodigo(request);
+        return Map.of("mensagem", "Código de verificação reenviado.");
     }
 
     @PostMapping("/login")

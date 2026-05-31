@@ -39,7 +39,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/cadastro", "/auth/cadastro/confirmar", "/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/cadastro", "/auth/cadastro/confirmar", "/auth/reenviar-codigo", "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/senha/solicitar-alteracao", "/auth/senha/confirmar-alteracao").permitAll()
                         .requestMatchers(HttpMethod.GET, "/livros", "/livros/{id}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/categorias", "/categorias/{id}").permitAll()

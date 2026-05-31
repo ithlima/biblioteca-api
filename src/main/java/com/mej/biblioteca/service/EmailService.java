@@ -25,7 +25,7 @@ public class EmailService {
 
     public void enviarCodigoVerificacao(String destinatario, String assunto, String codigo) {
         if (!mailEnabled) {
-            log.info("Envio de e-mail desabilitado. Destinatario={}, assunto={}, codigo={}", destinatario, assunto, codigo);
+            log.info("Envio de e-mail desabilitado. Código gerado para destinatário={}, assunto={}.", mascararEmail(destinatario), assunto);
             return;
         }
 
@@ -41,8 +41,17 @@ public class EmailService {
         mensagem.setText("Seu codigo de verificacao e: " + codigo + ". Ele expira em 5 minutos.");
         try {
             mailSender.send(mensagem);
+            log.info("Código de verificação enviado para destinatário={}.", mascararEmail(destinatario));
         } catch (MailException exception) {
             throw new EmailEnvioException("Não foi possível enviar o código de verificação por e-mail.");
         }
+    }
+
+    private String mascararEmail(String email) {
+        int separador = email.indexOf('@');
+        if (separador <= 1) {
+            return "***" + email.substring(Math.max(separador, 0));
+        }
+        return email.charAt(0) + "***" + email.substring(separador);
     }
 }
