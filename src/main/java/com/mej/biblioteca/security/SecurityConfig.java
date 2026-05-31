@@ -24,6 +24,8 @@ public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final RestAuthenticationEntryPoint authenticationEntryPoint;
+    private final RestAccessDeniedHandler accessDeniedHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -31,11 +33,19 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler)
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/cadastro", "/auth/cadastro/confirmar", "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/senha/solicitar-alteracao", "/auth/senha/confirmar-alteracao").permitAll()
                         .requestMatchers(HttpMethod.GET, "/livros", "/livros/{id}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/categorias", "/categorias/{id}").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/categorias").hasRole(Role.ADMIN.name())
+                        .requestMatchers(HttpMethod.PUT, "/categorias/{id}").hasRole(Role.ADMIN.name())
+                        .requestMatchers(HttpMethod.DELETE, "/categorias/{id}").hasRole(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.POST, "/livros").hasRole(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.PUT, "/livros/{id}").hasRole(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.DELETE, "/livros/{id}").hasRole(Role.ADMIN.name())

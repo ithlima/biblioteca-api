@@ -2,6 +2,7 @@ package com.mej.biblioteca.dto;
 
 import com.mej.biblioteca.model.Livro;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public record LivroResponse(
@@ -11,7 +12,7 @@ public record LivroResponse(
         String editora,
         String volume,
         String descricao,
-        String categorias,
+        List<CategoriaResponse> categorias,
         Integer quantidade,
         String fotoCapaUrl,
         Boolean oculto,
@@ -29,7 +30,7 @@ public record LivroResponse(
                 livro.getEditora(),
                 livro.getVolume(),
                 livro.getDescricao(),
-                livro.getCategorias(),
+                CategoriaResponse.from(livro.getCategorias()),
                 livro.getQuantidade(),
                 livro.getFotoCapaUrl(),
                 livro.getOculto(),

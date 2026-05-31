@@ -6,9 +6,9 @@ import java.util.List;
 public record ApiErrorResponse(
         LocalDateTime timestamp,
         int status,
-        String error,
-        String message,
+        String erro,
+        String mensagem,
         String path,
-        List<FieldErrorResponse> fields
+        List<FieldErrorResponse> campos
 ) {
 }

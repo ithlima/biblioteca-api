@@ -4,8 +4,8 @@ import com.mej.biblioteca.dto.LivroCatalogoResponse;
 import com.mej.biblioteca.dto.LivroOcultarRequest;
 import com.mej.biblioteca.dto.LivroRequest;
 import com.mej.biblioteca.dto.LivroResponse;
-import com.mej.biblioteca.exception.BusinessException;
-import com.mej.biblioteca.exception.NotFoundException;
+import com.mej.biblioteca.exception.ConflictException;
+import com.mej.biblioteca.exception.LivroNotFoundException;
 import com.mej.biblioteca.model.Livro;
 import com.mej.biblioteca.model.Role;
 import com.mej.biblioteca.model.StatusEmprestimo;
@@ -28,6 +28,7 @@ public class LivroService {
     private final LivroRepository livroRepository;
     private final EmprestimoRepository emprestimoRepository;
     private final UsuarioService usuarioService;
+    private final CategoriaService categoriaService;
 
     @Transactional(readOnly = true)
     public List<?> listar(Authentication authentication) {
@@ -51,7 +52,7 @@ public class LivroService {
             return LivroResponse.from(livro);
         }
         if (livro.getOculto()) {
-            throw new NotFoundException("Livro nao encontrado.");
+            throw new LivroNotFoundException();
         }
         return LivroCatalogoResponse.from(livro);
     }
@@ -66,7 +67,7 @@ public class LivroService {
                 .editora(request.editora())
                 .volume(request.volume())
                 .descricao(request.descricao())
-                .categorias(request.categorias())
+                .categorias(categoriaService.buscarEntidades(request.categoriasIds()))
                 .quantidade(request.quantidade())
                 .fotoCapaUrl(request.fotoCapaUrl())
                 .oculto(false)
@@ -85,7 +86,7 @@ public class LivroService {
         livro.setEditora(request.editora());
         livro.setVolume(request.volume());
         livro.setDescricao(request.descricao());
-        livro.setCategorias(request.categorias());
+        livro.setCategorias(categoriaService.buscarEntidades(request.categoriasIds()));
         livro.setQuantidade(request.quantidade());
         livro.setFotoCapaUrl(request.fotoCapaUrl());
         livro.setEditadoPor(admin);
@@ -96,10 +97,10 @@ public class LivroService {
     public void remover(UUID id) {
         Livro livro = buscarEntidade(id);
         if (emprestimoRepository.existsByLivroIdAndStatusIn(id, STATUS_COM_LIVRO_FORA)) {
-            throw new BusinessException("Nao e permitido remover livro que esteja emprestado.");
+            throw new ConflictException("Não é permitido remover livro que esteja emprestado.");
         }
         if (emprestimoRepository.existsByLivroId(id)) {
-            throw new BusinessException("Nao e permitido remover livro com historico de emprestimos.");
+            throw new ConflictException("Não é permitido remover livro com histórico de empréstimos.");
         }
         livroRepository.delete(livro);
     }
@@ -127,7 +128,7 @@ public class LivroService {
     @Transactional(readOnly = true)
     public Livro buscarEntidade(UUID id) {
         return livroRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Livro nao encontrado."));
+                .orElseThrow(LivroNotFoundException::new);
     }
 
     private boolean isAdmin(Authentication authentication) {
@@ -147,7 +148,7 @@ public class LivroService {
                 request.nomeObra(), request.autor(), request.editora(), request.volume(), idAtual);
 
         if (duplicado) {
-            throw new BusinessException("Ja existe livro cadastrado com mesma obra, autor, editora e volume.");
+            throw new ConflictException("Já existe livro cadastrado com mesma obra, autor, editora e volume.");
         }
     }
 }

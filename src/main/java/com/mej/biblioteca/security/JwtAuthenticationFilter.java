@@ -1,5 +1,8 @@
 package com.mej.biblioteca.security;
 
+import com.mej.biblioteca.exception.ApiErrorResponseWriter;
+import com.mej.biblioteca.exception.TokenInvalidoException;
+import com.mej.biblioteca.exception.UsuarioBloqueadoException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -7,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final CustomUserDetailsService userDetailsService;
+    private final ApiErrorResponseWriter errorResponseWriter;
 
     @Override
     protected void doFilterInternal(
@@ -44,17 +49,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-                if (jwtService.tokenValido(token, userDetails)) {
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities()
-                    );
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                if (!jwtService.tokenValido(token, userDetails)) {
+                    errorResponseWriter.write(request, response, new TokenInvalidoException());
+                    return;
                 }
+                if (!userDetails.isAccountNonLocked()) {
+                    errorResponseWriter.write(request, response, new UsuarioBloqueadoException());
+                    return;
+                }
+                if (!userDetails.isEnabled()) {
+                    errorResponseWriter.write(request, response, new TokenInvalidoException());
+                    return;
+                }
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                );
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        } catch (JwtException | IllegalArgumentException ex) {
+        } catch (JwtException | IllegalArgumentException | AuthenticationException ex) {
             SecurityContextHolder.clearContext();
+            errorResponseWriter.write(request, response, new TokenInvalidoException());
+            return;
         }
 
         filterChain.doFilter(request, response);

@@ -27,17 +27,12 @@ public class JwtService {
     }
 
     public String gerarToken(UserDetails userDetails) {
-        String role = userDetails.getAuthorities().stream()
-                .findFirst()
-                .map(authority -> authority.getAuthority().replaceFirst("^ROLE_", ""))
-                .orElse("");
-
+        
         Date agora = new Date();
         Date expiracao = new Date(agora.getTime() + expiration);
 
         return Jwts.builder()
                 .subject(userDetails.getUsername())
-                .claim("role", role)
                 .issuedAt(agora)
                 .expiration(expiracao)
                 .signWith(getSigningKey())

@@ -6,7 +6,8 @@ import com.mej.biblioteca.dto.ConfirmarAlteracaoSenhaRequest;
 import com.mej.biblioteca.dto.ConfirmarCadastroRequest;
 import com.mej.biblioteca.dto.LoginRequest;
 import com.mej.biblioteca.dto.SolicitarAlteracaoSenhaRequest;
-import com.mej.biblioteca.exception.BusinessException;
+import com.mej.biblioteca.exception.ConflictException;
+import com.mej.biblioteca.exception.UsuarioNotFoundException;
 import com.mej.biblioteca.model.Role;
 import com.mej.biblioteca.model.TipoCodigoVerificacao;
 import com.mej.biblioteca.model.Usuario;
@@ -35,12 +36,12 @@ public class AuthService {
     public AuthResponse cadastrar(AuthCadastroRequest request) {
         String email = normalizarEmail(request.email());
         if (usuarioRepository.existsByEmail(email)) {
-            throw new BusinessException("Ja existe usuario cadastrado com este e-mail.");
+            throw new ConflictException("Já existe usuário cadastrado com este e-mail.");
         }
         if (request.telefoneWhatsapp() != null
                 && !request.telefoneWhatsapp().isBlank()
                 && usuarioRepository.existsByTelefoneWhatsapp(request.telefoneWhatsapp())) {
-            throw new BusinessException("Ja existe usuario cadastrado com este telefone.");
+            throw new ConflictException("Já existe usuário cadastrado com este telefone.");
         }
 
         Usuario usuario = Usuario.builder()
@@ -64,7 +65,7 @@ public class AuthService {
         String email = normalizarEmail(request.email());
         codigoVerificacaoService.validar(email, TipoCodigoVerificacao.CADASTRO, request.codigo());
         Usuario usuario = usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException("Usuario nao encontrado."));
+                .orElseThrow(UsuarioNotFoundException::new);
         usuario.setEmailValidado(true);
         usuario.setAtivo(true);
         usuario.setLoginBloqueado(false);
@@ -78,7 +79,7 @@ public class AuthService {
         );
 
         Usuario usuario = usuarioRepository.findByEmailOrTelefoneWhatsapp(request.identificador(), request.identificador())
-                .orElseThrow(() -> new BusinessException("Usuario nao encontrado."));
+                .orElseThrow(UsuarioNotFoundException::new);
         return toAuthResponse(usuario);
     }
 
@@ -95,7 +96,7 @@ public class AuthService {
         String email = normalizarEmail(request.email());
         codigoVerificacaoService.validar(email, TipoCodigoVerificacao.ALTERACAO_SENHA, request.codigo());
         Usuario usuario = usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException("Usuario nao encontrado."));
+                .orElseThrow(UsuarioNotFoundException::new);
         usuario.setSenha(passwordEncoder.encode(request.novaSenha()));
     }
 

@@ -1,8 +1,10 @@
 package com.mej.biblioteca.exception;
 
-public class BusinessException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class BusinessException extends ApiException {
 
     public BusinessException(String message) {
-        super(message);
+        super(HttpStatus.BAD_REQUEST, "Regra de negócio violada", message);
     }
 }

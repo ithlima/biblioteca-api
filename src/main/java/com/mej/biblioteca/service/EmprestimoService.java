@@ -2,8 +2,12 @@ package com.mej.biblioteca.service;
 
 import com.mej.biblioteca.dto.EmprestimoResponse;
 import com.mej.biblioteca.dto.EmprestimoSolicitarRequest;
-import com.mej.biblioteca.exception.BusinessException;
-import com.mej.biblioteca.exception.NotFoundException;
+import com.mej.biblioteca.exception.AcessoNegadoException;
+import com.mej.biblioteca.exception.EmprestimoNotFoundException;
+import com.mej.biblioteca.exception.EmprestimoOperacaoInvalidaException;
+import com.mej.biblioteca.exception.LivroIndisponivelException;
+import com.mej.biblioteca.exception.UsuarioComPenalidadeAtivaException;
+import com.mej.biblioteca.exception.UsuarioComEmprestimoAtivoException;
 import com.mej.biblioteca.model.Emprestimo;
 import com.mej.biblioteca.model.Livro;
 import com.mej.biblioteca.model.Penalidade;
@@ -44,16 +48,16 @@ public class EmprestimoService {
         Livro livro = livroService.buscarEntidade(request.livroId());
 
         if (livro.getOculto()) {
-            throw new BusinessException("Livro indisponivel para solicitacao.");
+            throw new LivroIndisponivelException("Livro indisponível para solicitação.");
         }
         if (emprestimoRepository.existsByLeitorAndStatusIn(leitor, STATUS_ATIVOS)) {
-            throw new BusinessException("Leitor ja possui emprestimo ativo.");
+            throw new UsuarioComEmprestimoAtivoException();
         }
         if (temPenalidadeAtiva(leitor)) {
-            throw new BusinessException("Leitor possui penalidade ativa e nao pode solicitar emprestimos.");
+            throw new UsuarioComPenalidadeAtivaException();
         }
         if (livro.getQuantidade() <= 0) {
-            throw new BusinessException("Livro sem quantidade disponivel.");
+            throw new LivroIndisponivelException("Livro sem quantidade disponível.");
         }
 
         Emprestimo emprestimo = Emprestimo.builder()
@@ -70,12 +74,12 @@ public class EmprestimoService {
     public EmprestimoResponse emprestar(UUID id) {
         Emprestimo emprestimo = buscarEntidade(id);
         if (emprestimo.getStatus() != StatusEmprestimo.SOLICITADO) {
-            throw new BusinessException("Somente solicitacoes pendentes podem ser emprestadas.");
+            throw new EmprestimoOperacaoInvalidaException("Somente solicitações pendentes podem ser emprestadas.");
         }
 
         Livro livro = emprestimo.getLivro();
         if (livro.getQuantidade() <= 0) {
-            throw new BusinessException("Livro sem quantidade disponivel.");
+            throw new LivroIndisponivelException("Livro sem quantidade disponível.");
         }
 
         LocalDate dataEmprestimo = LocalDate.now();
@@ -95,13 +99,13 @@ public class EmprestimoService {
         validarDonoOuAdmin(emprestimo, usuario);
 
         if (emprestimo.getStatus() != StatusEmprestimo.EMPRESTADO) {
-            throw new BusinessException("Somente emprestimos em andamento podem ser renovados.");
+            throw new EmprestimoOperacaoInvalidaException("Somente empréstimos em andamento podem ser renovados.");
         }
         if (emprestimo.getDataDevolucaoPrevista().isBefore(LocalDate.now())) {
-            throw new BusinessException("Emprestimo fora do prazo nao pode ser renovado.");
+            throw new EmprestimoOperacaoInvalidaException("Empréstimo fora do prazo não pode ser renovado.");
         }
         if (emprestimo.getQuantidadeRenovacoes() >= LIMITE_RENOVACOES) {
-            throw new BusinessException("Limite maximo de renovacoes atingido.");
+            throw new EmprestimoOperacaoInvalidaException("Limite máximo de renovações atingido.");
         }
 
         emprestimo.setQuantidadeRenovacoes(emprestimo.getQuantidadeRenovacoes() + 1);
@@ -116,7 +120,7 @@ public class EmprestimoService {
         validarDonoOuAdmin(emprestimo, usuario);
 
         if (emprestimo.getStatus() != StatusEmprestimo.EMPRESTADO && emprestimo.getStatus() != StatusEmprestimo.ATRASADO) {
-            throw new BusinessException("Somente emprestimos em andamento podem ser devolvidos.");
+            throw new EmprestimoOperacaoInvalidaException("Somente empréstimos em andamento podem ser devolvidos.");
         }
 
         Livro livro = emprestimo.getLivro();
@@ -169,7 +173,7 @@ public class EmprestimoService {
 
     private Emprestimo buscarEntidade(UUID id) {
         return emprestimoRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Emprestimo nao encontrado."));
+                .orElseThrow(EmprestimoNotFoundException::new);
     }
 
     private boolean temPenalidadeAtiva(Usuario usuario) {
@@ -180,7 +184,7 @@ public class EmprestimoService {
         boolean admin = usuario.getRole().name().equals("ADMIN");
         boolean dono = emprestimo.getLeitor().getId().equals(usuario.getId());
         if (!admin && !dono) {
-            throw new BusinessException("Usuario nao autorizado para este emprestimo.");
+            throw new AcessoNegadoException();
         }
     }
 }

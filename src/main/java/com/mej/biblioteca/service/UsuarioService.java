@@ -1,7 +1,10 @@
 package com.mej.biblioteca.service;
 
 import com.mej.biblioteca.dto.UsuarioResponse;
-import com.mej.biblioteca.exception.NotFoundException;
+import com.mej.biblioteca.exception.AlteracaoRoleNaoPermitidaException;
+import com.mej.biblioteca.exception.RoleInvalidaException;
+import com.mej.biblioteca.exception.UltimoAdministradorException;
+import com.mej.biblioteca.exception.UsuarioNaoEncontradoException;
 import com.mej.biblioteca.model.Role;
 import com.mej.biblioteca.model.Usuario;
 import com.mej.biblioteca.repository.UsuarioRepository;
@@ -21,7 +24,7 @@ public class UsuarioService {
     @Transactional(readOnly = true)
     public Usuario buscarPorEmail(String email) {
         return usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException("Usuario nao encontrado."));
+                .orElseThrow(UsuarioNaoEncontradoException::new);
     }
 
     @Transactional(readOnly = true)
@@ -40,15 +43,34 @@ public class UsuarioService {
     @Transactional
     public UsuarioResponse promoverAdmin(UUID id) {
         Usuario usuario = buscarPorId(id);
+        if (usuario.getRole() == Role.ADMIN) {
+            throw new AlteracaoRoleNaoPermitidaException("Usuário já possui role ADMIN.");
+        }
         usuario.setRole(Role.ADMIN);
         return UsuarioResponse.from(usuario);
     }
 
     @Transactional
     public UsuarioResponse rebaixarLeitor(UUID id) {
+        List<Usuario> administradores = usuarioRepository.findAllByRoleForUpdate(Role.ADMIN);
         Usuario usuario = buscarPorId(id);
+        if (usuario.getRole() == Role.LEITOR) {
+            throw new AlteracaoRoleNaoPermitidaException("Usuário já possui role LEITOR.");
+        }
+        if (administradores.size() <= 1) {
+            throw new UltimoAdministradorException();
+        }
         usuario.setRole(Role.LEITOR);
         return UsuarioResponse.from(usuario);
+    }
+
+    @Transactional
+    public UsuarioResponse alterarRole(UUID id, String role) {
+        Role roleDestino = parseRole(role);
+        return switch (roleDestino) {
+            case ADMIN -> promoverAdmin(id);
+            case LEITOR -> rebaixarLeitor(id);
+        };
     }
 
     @Transactional
@@ -60,6 +82,21 @@ public class UsuarioService {
 
     private Usuario buscarPorId(UUID id) {
         return usuarioRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Usuario nao encontrado."));
+                .orElseThrow(UsuarioNaoEncontradoException::new);
+    }
+
+    @Transactional
+    public UsuarioResponse desbloquear(UUID id) {
+        Usuario usuario = buscarPorId(id);
+        usuario.setLoginBloqueado(false);
+        return UsuarioResponse.from(usuario);
+    }
+
+    private Role parseRole(String role) {
+        try {
+            return Role.valueOf(role.trim().toUpperCase());
+        } catch (IllegalArgumentException exception) {
+            throw new RoleInvalidaException();
+        }
     }
 }

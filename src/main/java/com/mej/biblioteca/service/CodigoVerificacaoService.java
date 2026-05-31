@@ -1,6 +1,6 @@
 package com.mej.biblioteca.service;
 
-import com.mej.biblioteca.exception.BusinessException;
+import com.mej.biblioteca.exception.CodigoVerificacaoInvalidoException;
 import com.mej.biblioteca.model.CodigoVerificacao;
 import com.mej.biblioteca.model.TipoCodigoVerificacao;
 import com.mej.biblioteca.repository.CodigoVerificacaoRepository;
@@ -39,13 +39,13 @@ public class CodigoVerificacaoService {
     public void validar(String email, TipoCodigoVerificacao tipo, String codigo) {
         CodigoVerificacao codigoVerificacao = codigoVerificacaoRepository
                 .findFirstByEmailAndTipoAndUsadoEmIsNullOrderByCriadoEmDesc(normalizarEmail(email), tipo)
-                .orElseThrow(() -> new BusinessException("Codigo de verificacao invalido ou expirado."));
+                .orElseThrow(CodigoVerificacaoInvalidoException::new);
 
         if (codigoVerificacao.getExpiraEm().isBefore(LocalDateTime.now())) {
-            throw new BusinessException("Codigo de verificacao invalido ou expirado.");
+            throw new CodigoVerificacaoInvalidoException();
         }
         if (!passwordEncoder.matches(codigo, codigoVerificacao.getCodigoHash())) {
-            throw new BusinessException("Codigo de verificacao invalido ou expirado.");
+            throw new CodigoVerificacaoInvalidoException();
         }
 
         codigoVerificacao.setUsadoEm(LocalDateTime.now());

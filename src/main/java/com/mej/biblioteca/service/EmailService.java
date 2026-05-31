@@ -1,6 +1,6 @@
 package com.mej.biblioteca.service;
 
-import com.mej.biblioteca.exception.BusinessException;
+import com.mej.biblioteca.exception.EmailEnvioException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
@@ -31,7 +31,7 @@ public class EmailService {
 
         JavaMailSender mailSender = mailSenderProvider.getIfAvailable();
         if (mailSender == null) {
-            throw new BusinessException("Envio de e-mail habilitado, mas o SMTP nao esta configurado.");
+            throw new EmailEnvioException("Envio de e-mail habilitado, mas o SMTP não está configurado.");
         }
 
         SimpleMailMessage mensagem = new SimpleMailMessage();
@@ -42,7 +42,7 @@ public class EmailService {
         try {
             mailSender.send(mensagem);
         } catch (MailException exception) {
-            throw new BusinessException("Nao foi possivel enviar o codigo de verificacao por e-mail.");
+            throw new EmailEnvioException("Não foi possível enviar o código de verificação por e-mail.");
         }
     }
 }

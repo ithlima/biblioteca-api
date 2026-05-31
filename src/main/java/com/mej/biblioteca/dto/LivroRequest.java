@@ -3,6 +3,9 @@ package com.mej.biblioteca.dto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import java.util.List;
+import java.util.UUID;
 
 public record LivroRequest(
         @NotBlank String nomeObra,
@@ -10,8 +13,12 @@ public record LivroRequest(
         String editora,
         String volume,
         String descricao,
-        String categorias,
+        List<UUID> categoriasIds,
         @NotNull @Min(0) Integer quantidade,
+        @Pattern(
+                regexp = "^https://.*\\.cloudflare.*\\.webp$",
+                message = "A capa deve ser uma URL .webp da Cloudflare."
+        )
         String fotoCapaUrl
 ) {
 }

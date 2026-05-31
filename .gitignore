@@ -3,6 +3,10 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### Node / npm ###
+node_modules/
+npm-debug.log*
+
 ### Wrapper ###
 .mvn/wrapper/maven-wrapper.jar
 
@@ -51,3 +55,6 @@ application-dev.properties
 
 ### Outros ###
 *.tmp
+*.temp
+*.bak
+*.swp

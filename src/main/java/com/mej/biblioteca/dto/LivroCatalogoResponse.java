@@ -1,6 +1,7 @@
 package com.mej.biblioteca.dto;
 
 import com.mej.biblioteca.model.Livro;
+import java.util.List;
 import java.util.UUID;
 
 public record LivroCatalogoResponse(
@@ -10,7 +11,7 @@ public record LivroCatalogoResponse(
         String editora,
         String volume,
         String descricao,
-        String categorias,
+        List<CategoriaResponse> categorias,
         Integer quantidade,
         String fotoCapaUrl
 ) {
@@ -22,7 +23,7 @@ public record LivroCatalogoResponse(
                 livro.getEditora(),
                 livro.getVolume(),
                 livro.getDescricao(),
-                livro.getCategorias(),
+                CategoriaResponse.from(livro.getCategorias()),
                 livro.getQuantidade(),
                 livro.getFotoCapaUrl()
         );
