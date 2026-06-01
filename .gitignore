@@ -49,6 +49,7 @@ Thumbs.db
 ### Configurações sensíveis ###
 .env
 .env.*
+!.env.example
 application-local.properties
 **/application-local.properties
 application-dev.properties
