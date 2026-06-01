@@ -42,13 +42,22 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(authenticationEntryPoint)
-                        .accessDeniedHandler(accessDeniedHandler)
-                )
+                        .accessDeniedHandler(accessDeniedHandler))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/webjars/**")
+                        .permitAll()
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/cadastro", "/auth/cadastro/confirmar", "/auth/reenviar-codigo", "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/senha/solicitar-alteracao", "/auth/senha/confirmar-alteracao").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/cadastro", "/auth/cadastro/confirmar",
+                                "/auth/reenviar-codigo", "/auth/login")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/senha/solicitar-alteracao",
+                                "/auth/senha/confirmar-alteracao")
+                        .permitAll()
                         .requestMatchers(HttpMethod.GET, "/livros", "/livros/{id}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/categorias", "/categorias/{id}").permitAll()
                         .requestMatchers(HttpMethod.POST, "/categorias").hasRole(Role.ADMIN.name())
@@ -57,7 +66,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/livros").hasRole(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.PUT, "/livros/{id}").hasRole(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.DELETE, "/livros/{id}").hasRole(Role.ADMIN.name())
-                        .requestMatchers(HttpMethod.PATCH, "/livros/{id}/ocultar", "/livros/{id}/disponibilizar").hasRole(Role.ADMIN.name())
+                        .requestMatchers(HttpMethod.PATCH, "/livros/{id}/ocultar", "/livros/{id}/disponibilizar")
+                        .hasRole(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.GET, "/usuarios").hasRole(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.PATCH, "/usuarios/**").hasRole(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.GET, "/emprestimos").hasRole(Role.ADMIN.name())
@@ -65,8 +75,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/penalidades").hasRole(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.POST, "/penalidades/verificar-atrasos").hasRole(Role.ADMIN.name())
                         .requestMatchers("/emprestimos/**").authenticated()
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .userDetailsService(userDetailsService)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -79,8 +88,7 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of(
                 "http://localhost:5173",
                 "http://localhost:3000",
-                "http://localhost:4200"
-        ));
+                "http://localhost:4200"));
 
         config.setAllowedMethods(List.of(
                 "GET",
@@ -88,8 +96,7 @@ public class SecurityConfig {
                 "PUT",
                 "DELETE",
                 "PATCH",
-                "OPTIONS"
-        ));
+                "OPTIONS"));
 
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
