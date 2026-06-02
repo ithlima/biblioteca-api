@@ -42,6 +42,16 @@ public class OpenApiConfig {
             openApi.getComponents()
                     .addSchemas("FieldErrorResponse", fieldErrorResponseSchema())
                     .addSchemas("ApiErrorResponse", apiErrorResponseSchema());
+            
+            if (openApi.getPaths() != null) {
+                openApi.getPaths().values().forEach(pathItem -> pathItem.readOperations().forEach(operation -> {
+                    io.swagger.v3.oas.models.responses.ApiResponses responses = operation.getResponses();
+                    if (!responses.containsKey("400")) responses.addApiResponse("400", respostaErro(HttpStatus.BAD_REQUEST));
+                    if (!responses.containsKey("403")) responses.addApiResponse("403", respostaErro(HttpStatus.FORBIDDEN));
+                    if (!responses.containsKey("404")) responses.addApiResponse("404", respostaErro(HttpStatus.NOT_FOUND));
+                    if (!responses.containsKey("500")) responses.addApiResponse("500", respostaErro(HttpStatus.INTERNAL_SERVER_ERROR));
+                }));
+            }
         };
     }
 
