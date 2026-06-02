@@ -42,16 +42,6 @@ public class OpenApiConfig {
             openApi.getComponents()
                     .addSchemas("FieldErrorResponse", fieldErrorResponseSchema())
                     .addSchemas("ApiErrorResponse", apiErrorResponseSchema());
-            openApi.getPaths().values()
-                    .forEach(path -> path.readOperations()
-                            .forEach(operation -> {
-                                operation.getResponses().addApiResponse("400", respostaErro(HttpStatus.BAD_REQUEST));
-                                operation.getResponses().addApiResponse("401", respostaErro(HttpStatus.UNAUTHORIZED));
-                                operation.getResponses().addApiResponse("403", respostaErro(HttpStatus.FORBIDDEN));
-                                operation.getResponses().addApiResponse("404", respostaErro(HttpStatus.NOT_FOUND));
-                                operation.getResponses().addApiResponse("409", respostaErro(HttpStatus.CONFLICT));
-                                operation.getResponses().addApiResponse("500", respostaErro(HttpStatus.INTERNAL_SERVER_ERROR));
-                            }));
         };
     }
 

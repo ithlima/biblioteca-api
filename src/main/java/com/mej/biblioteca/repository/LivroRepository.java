@@ -3,13 +3,20 @@ package com.mej.biblioteca.repository;
 import com.mej.biblioteca.model.Livro;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface LivroRepository extends JpaRepository<Livro, UUID> {
 
-    List<Livro> findByOcultoFalse();
+    @EntityGraph(attributePaths = {"categorias"})
+    Page<Livro> findAll(Pageable pageable);
+
+    @EntityGraph(attributePaths = {"categorias"})
+    Page<Livro> findByOcultoFalse(Pageable pageable);
 
     @Query("""
             select count(l) > 0

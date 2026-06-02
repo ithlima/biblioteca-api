@@ -11,6 +11,8 @@ import com.mej.biblioteca.repository.UsuarioRepository;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,11 +35,9 @@ public class UsuarioService {
     }
 
     @Transactional(readOnly = true)
-    public List<UsuarioResponse> listar() {
-        return usuarioRepository.findAll()
-                .stream()
-                .map(UsuarioResponse::from)
-                .toList();
+    public Page<UsuarioResponse> listar(Pageable pageable) {
+        return usuarioRepository.findAll(pageable)
+                .map(UsuarioResponse::from);
     }
 
     @Transactional

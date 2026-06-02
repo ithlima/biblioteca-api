@@ -19,6 +19,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -131,23 +134,20 @@ public class EmprestimoService {
     }
 
     @Transactional(readOnly = true)
-    public List<EmprestimoResponse> meus(Authentication authentication) {
+    public Page<EmprestimoResponse> meus(Pageable pageable, Authentication authentication) {
         Usuario leitor = usuarioService.usuarioAutenticado(authentication);
-        return emprestimoRepository.findByLeitorOrderByDataPedidoDesc(leitor)
-                .stream()
-                .map(EmprestimoResponse::from)
-                .toList();
+        return emprestimoRepository.findByLeitorOrderByDataPedidoDesc(leitor, pageable)
+                .map(EmprestimoResponse::from);
     }
 
     @Transactional(readOnly = true)
-    public List<EmprestimoResponse> listar() {
-        return emprestimoRepository.findAll()
-                .stream()
-                .map(EmprestimoResponse::from)
-                .toList();
+    public Page<EmprestimoResponse> listar(Pageable pageable) {
+        return emprestimoRepository.findAll(pageable)
+                .map(EmprestimoResponse::from);
     }
 
     @Transactional
+    @Scheduled(cron = "0 0 0 * * ?")
     public void verificarAtrasosAutomaticamente() {
         LocalDate hoje = LocalDate.now();
         emprestimoRepository.findByStatus(StatusEmprestimo.EMPRESTADO)

@@ -15,6 +15,8 @@ import com.mej.biblioteca.repository.LivroRepository;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,18 +33,14 @@ public class LivroService {
     private final CategoriaService categoriaService;
 
     @Transactional(readOnly = true)
-    public List<?> listar(Authentication authentication) {
+    public Page<?> listar(Pageable pageable, Authentication authentication) {
         if (isAdmin(authentication)) {
-            return livroRepository.findAll()
-                    .stream()
-                    .map(LivroResponse::from)
-                    .toList();
+            return livroRepository.findAll(pageable)
+                    .map(LivroResponse::from);
         }
 
-        return livroRepository.findByOcultoFalse()
-                .stream()
-                .map(LivroCatalogoResponse::from)
-                .toList();
+        return livroRepository.findByOcultoFalse(pageable)
+                .map(LivroCatalogoResponse::from);
     }
 
     @Transactional(readOnly = true)

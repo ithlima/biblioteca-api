@@ -6,6 +6,9 @@ import com.mej.biblioteca.model.Usuario;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EmprestimoRepository extends JpaRepository<Emprestimo, UUID> {
@@ -16,7 +19,11 @@ public interface EmprestimoRepository extends JpaRepository<Emprestimo, UUID> {
 
     boolean existsByLivroIdAndStatusIn(UUID livroId, Collection<StatusEmprestimo> status);
 
-    List<Emprestimo> findByLeitorOrderByDataPedidoDesc(Usuario leitor);
+    @EntityGraph(attributePaths = {"livro", "leitor"})
+    Page<Emprestimo> findByLeitorOrderByDataPedidoDesc(Usuario leitor, Pageable pageable);
 
     List<Emprestimo> findByStatus(StatusEmprestimo status);
+
+    @EntityGraph(attributePaths = {"livro", "leitor"})
+    Page<Emprestimo> findAll(Pageable pageable);
 }

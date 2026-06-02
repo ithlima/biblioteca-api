@@ -5,9 +5,11 @@ import com.mej.biblioteca.dto.LivroRequest;
 import com.mej.biblioteca.dto.LivroResponse;
 import com.mej.biblioteca.service.LivroService;
 import jakarta.validation.Valid;
-import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,8 +31,8 @@ public class LivroController {
     private final LivroService livroService;
 
     @GetMapping
-    public List<?> listar(Authentication authentication) {
-        return livroService.listar(authentication);
+    public Page<?> listar(@PageableDefault(size = 10) Pageable pageable, Authentication authentication) {
+        return livroService.listar(pageable, authentication);
     }
 
     @GetMapping("/{id}")

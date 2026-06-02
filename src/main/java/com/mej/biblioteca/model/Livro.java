@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -84,6 +85,9 @@ public class Livro {
     private LocalDateTime criadoEm;
 
     private LocalDateTime editadoEm;
+
+    @Version
+    private Long version;
 
     @PrePersist
     void prePersist() {

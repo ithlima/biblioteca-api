@@ -4,9 +4,11 @@ import com.mej.biblioteca.dto.EmprestimoResponse;
 import com.mej.biblioteca.dto.EmprestimoSolicitarRequest;
 import com.mej.biblioteca.service.EmprestimoService;
 import jakarta.validation.Valid;
-import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -49,13 +51,13 @@ public class EmprestimoController {
     }
 
     @GetMapping("/meus")
-    public List<EmprestimoResponse> meus(Authentication authentication) {
-        return emprestimoService.meus(authentication);
+    public Page<EmprestimoResponse> meus(@PageableDefault(size = 10) Pageable pageable, Authentication authentication) {
+        return emprestimoService.meus(pageable, authentication);
     }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public List<EmprestimoResponse> listar() {
-        return emprestimoService.listar();
+    public Page<EmprestimoResponse> listar(@PageableDefault(size = 10) Pageable pageable) {
+        return emprestimoService.listar(pageable);
     }
 }
