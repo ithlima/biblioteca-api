@@ -16,8 +16,8 @@ public record LivroRequest(
         List<UUID> categoriasIds,
         @NotNull @Min(0) Integer quantidade,
         @Pattern(
-                regexp = "^https://.*\\.cloudflare.*\\.webp$",
-                message = "A capa deve ser uma URL .webp da Cloudflare."
+                regexp = "^https://res\\.cloudinary\\.com/.*\\.webp$",
+                message = "A capa deve ser uma URL .webp do Cloudinary."
         )
         String fotoCapaUrl
 ) {

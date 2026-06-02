@@ -33,12 +33,20 @@ public class LivroService {
     private final CategoriaService categoriaService;
 
     @Transactional(readOnly = true)
-    public Page<?> listar(Pageable pageable, Authentication authentication) {
+    public Page<?> listar(UUID categoriaId, Pageable pageable, Authentication authentication) {
         if (isAdmin(authentication)) {
+            if (categoriaId != null) {
+                return livroRepository.findByCategoriasId(categoriaId, pageable)
+                        .map(LivroResponse::from);
+            }
             return livroRepository.findAll(pageable)
                     .map(LivroResponse::from);
         }
 
+        if (categoriaId != null) {
+            return livroRepository.findByOcultoFalseAndCategoriasId(categoriaId, pageable)
+                    .map(LivroCatalogoResponse::from);
+        }
         return livroRepository.findByOcultoFalse(pageable)
                 .map(LivroCatalogoResponse::from);
     }

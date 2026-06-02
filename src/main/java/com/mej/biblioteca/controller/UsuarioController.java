@@ -10,7 +10,9 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +28,7 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
 
     @GetMapping
-    public Page<UsuarioResponse> listar(@PageableDefault(size = 10) Pageable pageable) {
+    public Page<UsuarioResponse> listar(@ParameterObject @PageableDefault(size = 10, sort = "criadoEm", direction = Sort.Direction.DESC) Pageable pageable) {
         return usuarioService.listar(pageable);
     }
 

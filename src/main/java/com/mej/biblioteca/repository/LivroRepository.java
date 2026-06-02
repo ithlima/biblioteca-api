@@ -16,7 +16,13 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
     Page<Livro> findAll(Pageable pageable);
 
     @EntityGraph(attributePaths = {"categorias"})
+    Page<Livro> findByCategoriasId(UUID categoriaId, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"categorias"})
     Page<Livro> findByOcultoFalse(Pageable pageable);
+
+    @EntityGraph(attributePaths = {"categorias"})
+    Page<Livro> findByOcultoFalseAndCategoriasId(UUID categoriaId, Pageable pageable);
 
     @Query("""
             select count(l) > 0
