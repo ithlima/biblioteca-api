@@ -2,7 +2,6 @@ package com.mej.biblioteca.service;
 
 import com.mej.biblioteca.exception.EmailEnvioException;
 import com.resend.Resend;
-import com.resend.core.exception.ResendException;
 import com.resend.services.emails.model.CreateEmailOptions;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +53,7 @@ public class EmailService {
         try {
             resend.emails().send(sendEmailRequest);
             log.info("Código de verificação enviado para destinatário={}.", mascararEmail(destinatario));
-        } catch (ResendException exception) {
+        } catch (Exception exception) {
             log.error("Erro ao enviar email pelo Resend: {}", exception.getMessage(), exception);
             throw new EmailEnvioException("Não foi possível enviar o código de verificação por e-mail.");
         }
