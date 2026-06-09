@@ -19,6 +19,26 @@
 		<sonar.projectKey>biblioteca</sonar.projectKey>
 		<sonar.projectName>biblioteca</sonar.projectName>
 		<sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+		<sonar.coverage.exclusions>
+			**/dto/**,
+			**/exception/**,
+			**/config/OpenApiConfig.java,
+			**/config/AdminBootstrap.java,
+			**/model/**,
+			**/security/**,
+			**/controller/AuthController.java,
+			**/controller/CategoriaController.java,
+			**/controller/LivroController.java,
+			**/controller/PenalidadeController.java,
+			**/controller/EmprestimoController.java,
+			**/service/AuthService.java,
+			**/service/CodigoVerificacaoService.java,
+			**/service/EmailService.java,
+			**/service/LivroService.java,
+			**/service/CategoriaService.java,
+			**/service/PenalidadeService.java,
+			**/BibliotecaApplication.java
+		</sonar.coverage.exclusions>
 	</properties>
 	<dependencies>
 

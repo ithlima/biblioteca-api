@@ -59,3 +59,8 @@ application-dev.properties
 *.temp
 *.bak
 *.swp
+
+### Agent temporary files ###
+/*.json
+/*.py
+/robot_tests/results/
