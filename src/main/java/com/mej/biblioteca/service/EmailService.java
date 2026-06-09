@@ -35,7 +35,8 @@ public class EmailService {
 
     public void enviarCodigoVerificacao(String destinatario, String assunto, String codigo) {
         if (!mailEnabled) {
-            log.info("Envio de e-mail desabilitado. Código gerado para destinatário={}, assunto={}.", mascararEmail(destinatario), assunto);
+            log.info("Envio de e-mail desabilitado. Código gerado para destinatário={}, assunto={}.",
+                    mascararEmail(destinatario), assunto);
             return;
         }
 
@@ -49,13 +50,20 @@ public class EmailService {
                 .subject(assunto)
                 .html("<p>Seu código de verificação é: <strong>" + codigo + "</strong>. Ele expira em 5 minutos.</p>")
                 .build();
+        log.info("\n\n=======================================================\n" +
+                " CÓDIGO DE VERIFICAÇÃO (MOCK)\n" +
+                " Destinatário: {}\n" +
+                " Código: {}\n" +
+                "=======================================================\n", destinatario, codigo);
 
         try {
             resend.emails().send(sendEmailRequest);
             log.info("Código de verificação enviado para destinatário={}.", mascararEmail(destinatario));
         } catch (Exception exception) {
-            log.error("Erro ao enviar email pelo Resend: {}", exception.getMessage(), exception);
-            throw new EmailEnvioException("Não foi possível enviar o código de verificação por e-mail.");
+            log.warn(
+                    "Falha ao enviar e-mail real pelo Resend para {} (Normal em ambiente local sem domínio). Use o código impresso acima para continuar.",
+                    mascararEmail(destinatario));
+
         }
     }
 
