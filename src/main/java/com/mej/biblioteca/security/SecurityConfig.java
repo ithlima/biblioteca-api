@@ -37,6 +37,7 @@ public class SecurityConfig {
     @Value("${app.cors.allowed-origins}")
     private List<String> corsAllowedOrigins;
 
+    @SuppressWarnings("java:S4502") // CSRF desabilitado é seguro aqui pois a API é Stateless e usa JWT
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http

@@ -20,6 +20,7 @@ import org.springdoc.core.customizers.OpenApiCustomizer;
 public class OpenApiConfig {
 
     private static final String BEARER_AUTH = "bearerAuth";
+    private static final String MENSAGEM_KEY = "mensagem";
 
     @Bean
     public OpenAPI bibliotecaOpenApi() {
@@ -64,18 +65,18 @@ public class OpenApiConfig {
                 ));
     }
 
-    private Schema<?> fieldErrorResponseSchema() {
+    private Schema<Object> fieldErrorResponseSchema() {
         return new ObjectSchema()
                 .addProperty("campo", new Schema<String>().type("string"))
-                .addProperty("mensagem", new Schema<String>().type("string"));
+                .addProperty(MENSAGEM_KEY, new Schema<String>().type("string"));
     }
 
-    private Schema<?> apiErrorResponseSchema() {
+    private Schema<Object> apiErrorResponseSchema() {
         return new ObjectSchema()
                 .addProperty("timestamp", new Schema<String>().type("string").format("date-time"))
                 .addProperty("status", new IntegerSchema())
                 .addProperty("erro", new Schema<String>().type("string"))
-                .addProperty("mensagem", new Schema<String>().type("string"))
+                .addProperty(MENSAGEM_KEY, new Schema<String>().type("string"))
                 .addProperty("path", new Schema<String>().type("string"))
                 .addProperty("campos", new ArraySchema()
                         .items(new Schema<>().$ref("#/components/schemas/FieldErrorResponse")));

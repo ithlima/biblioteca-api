@@ -29,7 +29,7 @@ public class CodigoVerificacaoService {
                 .email(normalizarEmail(email))
                 .codigoHash(passwordEncoder.encode(codigo))
                 .tipo(tipo)
-                .expiraEm(LocalDateTime.now().plusMinutes(VALIDADE_MINUTOS))
+                .expiraEm(LocalDateTime.now(java.time.ZoneId.of("UTC")).plusMinutes(VALIDADE_MINUTOS))
                 .build();
         codigoVerificacaoRepository.save(codigoVerificacao);
         emailService.enviarCodigoVerificacao(email, assunto(tipo), codigo);
@@ -41,14 +41,14 @@ public class CodigoVerificacaoService {
                 .findFirstByEmailAndTipoAndUsadoEmIsNullOrderByCriadoEmDesc(normalizarEmail(email), tipo)
                 .orElseThrow(CodigoVerificacaoInvalidoException::new);
 
-        if (codigoVerificacao.getExpiraEm().isBefore(LocalDateTime.now())) {
+        if (codigoVerificacao.getExpiraEm().isBefore(LocalDateTime.now(java.time.ZoneId.of("UTC")))) {
             throw new CodigoVerificacaoInvalidoException();
         }
         if (!passwordEncoder.matches(codigo, codigoVerificacao.getCodigoHash())) {
             throw new CodigoVerificacaoInvalidoException();
         }
 
-        codigoVerificacao.setUsadoEm(LocalDateTime.now());
+        codigoVerificacao.setUsadoEm(LocalDateTime.now(java.time.ZoneId.of("UTC")));
     }
 
     private String gerarCodigo() {

@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+    private static final String MENSAGEM_KEY = "mensagem";
 
     @PostMapping("/cadastro")
     @ResponseStatus(HttpStatus.CREATED)
@@ -41,7 +42,7 @@ public class AuthController {
     @Operation(summary = "Reenviar código de verificação do cadastro")
     public Map<String, String> reenviarCodigo(@RequestBody @Valid ReenviarCodigoRequest request) {
         authService.reenviarCodigo(request);
-        return Map.of("mensagem", "Código de verificação reenviado.");
+        return Map.of(MENSAGEM_KEY, "Código de verificação reenviado.");
     }
 
     @PostMapping("/login")
@@ -52,12 +53,12 @@ public class AuthController {
     @PostMapping("/senha/solicitar-alteracao")
     public Map<String, String> solicitarAlteracaoSenha(@RequestBody @Valid SolicitarAlteracaoSenhaRequest request) {
         authService.solicitarAlteracaoSenha(request);
-        return Map.of("mensagem", "Se o e-mail estiver cadastrado e ativo, um codigo sera enviado.");
+        return Map.of(MENSAGEM_KEY, "Se o e-mail estiver cadastrado e ativo, um codigo sera enviado.");
     }
 
     @PostMapping("/senha/confirmar-alteracao")
     public Map<String, String> confirmarAlteracaoSenha(@RequestBody @Valid ConfirmarAlteracaoSenhaRequest request) {
         authService.confirmarAlteracaoSenha(request);
-        return Map.of("mensagem", "Senha alterada com sucesso.");
+        return Map.of(MENSAGEM_KEY, "Senha alterada com sucesso.");
     }
 }

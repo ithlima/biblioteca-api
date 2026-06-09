@@ -80,7 +80,7 @@ public class ApiExceptionHandler {
             List<FieldErrorResponse> campos
     ) {
         ApiErrorResponse body = new ApiErrorResponse(
-                LocalDateTime.now(),
+                LocalDateTime.now(java.time.ZoneId.of("UTC")),
                 status.value(),
                 erro,
                 mensagem,

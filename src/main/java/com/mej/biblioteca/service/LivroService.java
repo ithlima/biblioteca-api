@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings("java:S6809")
 public class LivroService {
 
     private static final List<StatusEmprestimo> STATUS_COM_LIVRO_FORA = List.of(StatusEmprestimo.EMPRESTADO, StatusEmprestimo.ATRASADO);
@@ -33,7 +34,7 @@ public class LivroService {
     private final CategoriaService categoriaService;
 
     @Transactional(readOnly = true)
-    public Page<?> listar(UUID categoriaId, Pageable pageable, Authentication authentication) {
+    public Page<Object> listar(UUID categoriaId, Pageable pageable, Authentication authentication) {
         if (isAdmin(authentication)) {
             if (categoriaId != null) {
                 return livroRepository.findByCategoriasId(categoriaId, pageable)

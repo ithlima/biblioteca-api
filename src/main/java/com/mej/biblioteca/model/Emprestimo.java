@@ -61,7 +61,7 @@ public class Emprestimo {
     @PrePersist
     void prePersist() {
         if (dataPedido == null) {
-            dataPedido = LocalDateTime.now();
+            dataPedido = LocalDateTime.now(java.time.ZoneId.of("UTC"));
         }
         if (quantidadeRenovacoes == null) {
             quantidadeRenovacoes = 0;

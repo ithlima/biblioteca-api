@@ -73,7 +73,7 @@ public class Usuario {
             emailValidado = false;
         }
         if (criadoEm == null) {
-            criadoEm = LocalDateTime.now();
+            criadoEm = LocalDateTime.now(java.time.ZoneId.of("UTC"));
         }
     }
 }

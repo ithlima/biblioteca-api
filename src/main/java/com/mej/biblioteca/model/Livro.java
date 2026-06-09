@@ -98,12 +98,12 @@ public class Livro {
             oculto = false;
         }
         if (criadoEm == null) {
-            criadoEm = LocalDateTime.now();
+            criadoEm = LocalDateTime.now(java.time.ZoneId.of("UTC"));
         }
     }
 
     @PreUpdate
     void preUpdate() {
-        editadoEm = LocalDateTime.now();
+        editadoEm = LocalDateTime.now(java.time.ZoneId.of("UTC"));
     }
 }

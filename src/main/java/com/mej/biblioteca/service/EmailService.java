@@ -50,11 +50,15 @@ public class EmailService {
                 .subject(assunto)
                 .html("<p>Seu código de verificação é: <strong>" + codigo + "</strong>. Ele expira em 5 minutos.</p>")
                 .build();
-        log.info("\n\n=======================================================\n" +
-                " CÓDIGO DE VERIFICAÇÃO (MOCK)\n" +
-                " Destinatário: {}\n" +
-                " Código: {}\n" +
-                "=======================================================\n", destinatario, codigo);
+        log.info("""
+
+
+                =======================================================
+                 CÓDIGO DE VERIFICAÇÃO (MOCK)
+                 Destinatário: {}
+                 Código: {}
+                =======================================================
+                """, destinatario, codigo);
 
         try {
             resend.emails().send(sendEmailRequest);

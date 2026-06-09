@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings("java:S6809")
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;

@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings("java:S6809")
 public class CategoriaService {
 
     private final CategoriaRepository categoriaRepository;

@@ -18,7 +18,7 @@ public class ApiErrorResponseWriter {
 
     public void write(HttpServletRequest request, HttpServletResponse response, ApiException exception) throws IOException {
         ApiErrorResponse body = new ApiErrorResponse(
-                LocalDateTime.now(),
+                LocalDateTime.now(java.time.ZoneId.of("UTC")),
                 exception.getStatus().value(),
                 exception.getErro(),
                 exception.getMessage(),

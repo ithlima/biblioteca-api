@@ -51,7 +51,7 @@ public class CodigoVerificacao {
     @PrePersist
     void prePersist() {
         if (criadoEm == null) {
-            criadoEm = LocalDateTime.now();
+            criadoEm = LocalDateTime.now(java.time.ZoneId.of("UTC"));
         }
     }
 }

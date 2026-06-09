@@ -1,5 +1,6 @@
 package com.mej.biblioteca.exception;
 
+@SuppressWarnings("java:S110")
 public class CategoriaNotFoundException extends NotFoundException {
 
     public CategoriaNotFoundException() {

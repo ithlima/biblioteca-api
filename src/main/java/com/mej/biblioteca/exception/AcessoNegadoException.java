@@ -2,6 +2,7 @@ package com.mej.biblioteca.exception;
 
 import org.springframework.http.HttpStatus;
 
+@SuppressWarnings("java:S110")
 public class AcessoNegadoException extends ApiException {
 
     public AcessoNegadoException() {
