@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -30,6 +31,13 @@ public class UsuarioController {
     @GetMapping
     public Page<UsuarioResponse> listar(@ParameterObject @PageableDefault(size = 10, sort = "criadoEm", direction = Sort.Direction.DESC) Pageable pageable) {
         return usuarioService.listar(pageable);
+    }
+
+    @GetMapping("/me")
+    @Operation(summary = "Obter o próprio perfil do usuário autenticado")
+    @ApiResponse(responseCode = "200", description = "Perfil do usuário")
+    public UsuarioResponse meuPerfil(Authentication authentication) {
+        return UsuarioResponse.from(usuarioService.usuarioAutenticado(authentication));
     }
 
     @PatchMapping("/{id}/promover-admin")
