@@ -1,37 +1,27 @@
 package com.mej.biblioteca.service;
 
 import com.mej.biblioteca.exception.EmailEnvioException;
-import com.resend.Resend;
-import com.resend.services.emails.model.CreateEmailOptions;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmailService {
 
+    private final ObjectProvider<JavaMailSender> mailSenderProvider;
+
     @Value("${app.mail.enabled:false}")
     private boolean mailEnabled;
 
-    @Value("${resend.api.key:}")
-    private String resendApiKey;
-
-    @Value("${app.mail.from:onboarding@resend.dev}")
+    @Value("${spring.mail.username:no-reply@biblioteca-mej.local}")
     private String remetente;
-
-    private Resend resend;
-
-    @PostConstruct
-    public void init() {
-        if (StringUtils.hasText(resendApiKey)) {
-            this.resend = new Resend(resendApiKey);
-        }
-    }
 
     public void enviarCodigoVerificacao(String destinatario, String assunto, String codigo) {
         if (!mailEnabled) {
@@ -40,34 +30,33 @@ public class EmailService {
             return;
         }
 
-        if (this.resend == null) {
-            throw new EmailEnvioException("Envio de e-mail habilitado, mas a API Key do Resend não está configurada.");
+        JavaMailSender mailSender = mailSenderProvider.getIfAvailable();
+        if (mailSender == null) {
+            throw new EmailEnvioException("Envio de e-mail habilitado, mas o SMTP não está configurado.");
         }
 
-        CreateEmailOptions sendEmailRequest = CreateEmailOptions.builder()
-                .from(remetente)
-                .to(destinatario)
-                .subject(assunto)
-                .html("<p>Seu código de verificação é: <strong>" + codigo + "</strong>. Ele expira em 5 minutos.</p>")
-                .build();
+        SimpleMailMessage mensagem = new SimpleMailMessage();
+        mensagem.setFrom(remetente);
+        mensagem.setTo(destinatario);
+        mensagem.setSubject(assunto);
+        mensagem.setText("Seu código de verificação é: " + codigo + ". Ele expira em 5 minutos.");
+
         log.info("""
 
 
                 =======================================================
-                 CÓDIGO DE VERIFICAÇÃO (MOCK)
+                 CÓDIGO DE VERIFICAÇÃO (MOCK/SMTP)
                  Destinatário: {}
                  Código: {}
                 =======================================================
                 """, destinatario, codigo);
 
         try {
-            resend.emails().send(sendEmailRequest);
+            mailSender.send(mensagem);
             log.info("Código de verificação enviado para destinatário={}.", mascararEmail(destinatario));
-        } catch (Exception exception) {
-            log.warn(
-                    "Falha ao enviar e-mail real pelo Resend para {} (Normal em ambiente local sem domínio). Use o código impresso acima para continuar.",
+        } catch (MailException exception) {
+            log.warn("Falha ao enviar e-mail real pelo SMTP para {}. Use o código impresso acima para continuar.",
                     mascararEmail(destinatario));
-
         }
     }
 
