@@ -1,6 +1,6 @@
 package com.mej.biblioteca.service;
 
-import com.mej.biblioteca.exception.EmailEnvioException;
+import com.mej.biblioteca.exception.domain.EmailEnvioException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;

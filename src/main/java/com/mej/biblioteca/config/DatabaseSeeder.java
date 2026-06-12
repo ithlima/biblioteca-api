@@ -1,7 +1,7 @@
 package com.mej.biblioteca.config;
 
-import com.mej.biblioteca.model.Role;
-import com.mej.biblioteca.model.Usuario;
+import com.mej.biblioteca.model.enums.Role;
+import com.mej.biblioteca.model.entity.Usuario;
 import com.mej.biblioteca.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

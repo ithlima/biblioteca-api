@@ -1,6 +1,6 @@
 package com.mej.biblioteca.repository;
 
-import com.mej.biblioteca.model.Livro;
+import com.mej.biblioteca.model.entity.Livro;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

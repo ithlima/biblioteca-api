@@ -1,15 +1,15 @@
 package com.mej.biblioteca.service;
 
-import com.mej.biblioteca.dto.LivroCatalogoResponse;
-import com.mej.biblioteca.dto.LivroOcultarRequest;
-import com.mej.biblioteca.dto.LivroRequest;
-import com.mej.biblioteca.dto.LivroResponse;
+import com.mej.biblioteca.dto.livro.LivroCatalogoResponse;
+import com.mej.biblioteca.dto.livro.LivroOcultarRequest;
+import com.mej.biblioteca.dto.livro.LivroRequest;
+import com.mej.biblioteca.dto.livro.LivroResponse;
 import com.mej.biblioteca.exception.ConflictException;
-import com.mej.biblioteca.exception.LivroNotFoundException;
-import com.mej.biblioteca.model.Livro;
-import com.mej.biblioteca.model.Role;
-import com.mej.biblioteca.model.StatusEmprestimo;
-import com.mej.biblioteca.model.Usuario;
+import com.mej.biblioteca.exception.domain.LivroNotFoundException;
+import com.mej.biblioteca.model.entity.Livro;
+import com.mej.biblioteca.model.enums.Role;
+import com.mej.biblioteca.model.enums.StatusEmprestimo;
+import com.mej.biblioteca.model.entity.Usuario;
 import com.mej.biblioteca.repository.EmprestimoRepository;
 import com.mej.biblioteca.repository.LivroRepository;
 import java.util.List;

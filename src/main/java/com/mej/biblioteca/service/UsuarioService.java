@@ -1,12 +1,12 @@
 package com.mej.biblioteca.service;
 
-import com.mej.biblioteca.dto.UsuarioResponse;
-import com.mej.biblioteca.exception.AlteracaoRoleNaoPermitidaException;
-import com.mej.biblioteca.exception.RoleInvalidaException;
-import com.mej.biblioteca.exception.UltimoAdministradorException;
-import com.mej.biblioteca.exception.UsuarioNaoEncontradoException;
-import com.mej.biblioteca.model.Role;
-import com.mej.biblioteca.model.Usuario;
+import com.mej.biblioteca.dto.usuario.UsuarioResponse;
+import com.mej.biblioteca.exception.domain.AlteracaoRoleNaoPermitidaException;
+import com.mej.biblioteca.exception.domain.RoleInvalidaException;
+import com.mej.biblioteca.exception.domain.UltimoAdministradorException;
+import com.mej.biblioteca.exception.domain.UsuarioNaoEncontradoException;
+import com.mej.biblioteca.model.enums.Role;
+import com.mej.biblioteca.model.entity.Usuario;
 import com.mej.biblioteca.repository.UsuarioRepository;
 import java.util.List;
 import java.util.UUID;

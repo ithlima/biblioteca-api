@@ -1,8 +1,8 @@
 package com.mej.biblioteca.service;
 
-import com.mej.biblioteca.model.Emprestimo;
-import com.mej.biblioteca.model.StatusEmprestimo;
-import com.mej.biblioteca.model.Usuario;
+import com.mej.biblioteca.model.entity.Emprestimo;
+import com.mej.biblioteca.model.enums.StatusEmprestimo;
+import com.mej.biblioteca.model.entity.Usuario;
 import com.mej.biblioteca.repository.EmprestimoRepository;
 import com.mej.biblioteca.repository.PenalidadeRepository;
 import org.junit.jupiter.api.BeforeEach;

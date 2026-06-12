@@ -1,6 +1,6 @@
 package com.mej.biblioteca.security;
 
-import com.mej.biblioteca.model.Role;
+import com.mej.biblioteca.model.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

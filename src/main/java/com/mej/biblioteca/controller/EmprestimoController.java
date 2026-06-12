@@ -1,7 +1,7 @@
 package com.mej.biblioteca.controller;
 
-import com.mej.biblioteca.dto.EmprestimoResponse;
-import com.mej.biblioteca.dto.EmprestimoSolicitarRequest;
+import com.mej.biblioteca.dto.emprestimo.EmprestimoResponse;
+import com.mej.biblioteca.dto.emprestimo.EmprestimoSolicitarRequest;
 import com.mej.biblioteca.service.EmprestimoService;
 import jakarta.validation.Valid;
 import java.util.UUID;

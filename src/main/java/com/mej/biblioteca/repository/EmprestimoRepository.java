@@ -1,8 +1,8 @@
 package com.mej.biblioteca.repository;
 
-import com.mej.biblioteca.model.Emprestimo;
-import com.mej.biblioteca.model.StatusEmprestimo;
-import com.mej.biblioteca.model.Usuario;
+import com.mej.biblioteca.model.entity.Emprestimo;
+import com.mej.biblioteca.model.enums.StatusEmprestimo;
+import com.mej.biblioteca.model.entity.Usuario;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;

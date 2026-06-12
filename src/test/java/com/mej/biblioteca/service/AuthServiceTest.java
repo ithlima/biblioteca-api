@@ -4,11 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.mej.biblioteca.dto.ReenviarCodigoRequest;
+import com.mej.biblioteca.dto.auth.ReenviarCodigoRequest;
 import com.mej.biblioteca.exception.ConflictException;
-import com.mej.biblioteca.exception.UsuarioNotFoundException;
-import com.mej.biblioteca.model.TipoCodigoVerificacao;
-import com.mej.biblioteca.model.Usuario;
+import com.mej.biblioteca.exception.domain.UsuarioNotFoundException;
+import com.mej.biblioteca.model.enums.TipoCodigoVerificacao;
+import com.mej.biblioteca.model.entity.Usuario;
 import com.mej.biblioteca.repository.UsuarioRepository;
 import com.mej.biblioteca.security.CustomUserDetailsService;
 import com.mej.biblioteca.security.JwtService;

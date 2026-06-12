@@ -1,8 +1,8 @@
 package com.mej.biblioteca.security;
 
-import com.mej.biblioteca.exception.ApiErrorResponseWriter;
-import com.mej.biblioteca.exception.TokenInvalidoException;
-import com.mej.biblioteca.exception.UsuarioBloqueadoException;
+import com.mej.biblioteca.exception.handler.ApiErrorResponseWriter;
+import com.mej.biblioteca.exception.domain.TokenInvalidoException;
+import com.mej.biblioteca.exception.domain.UsuarioBloqueadoException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

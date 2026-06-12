@@ -1,8 +1,8 @@
 package com.mej.biblioteca.controller;
 
-import com.mej.biblioteca.dto.LivroOcultarRequest;
-import com.mej.biblioteca.dto.LivroRequest;
-import com.mej.biblioteca.dto.LivroResponse;
+import com.mej.biblioteca.dto.livro.LivroOcultarRequest;
+import com.mej.biblioteca.dto.livro.LivroRequest;
+import com.mej.biblioteca.dto.livro.LivroResponse;
 import com.mej.biblioteca.service.LivroService;
 import jakarta.validation.Valid;
 import java.util.UUID;

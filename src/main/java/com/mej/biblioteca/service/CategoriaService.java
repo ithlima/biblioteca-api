@@ -1,11 +1,11 @@
 package com.mej.biblioteca.service;
 
-import com.mej.biblioteca.dto.CategoriaRequest;
-import com.mej.biblioteca.dto.CategoriaResponse;
-import com.mej.biblioteca.exception.CategoriaNomeDuplicadoException;
-import com.mej.biblioteca.exception.CategoriaNotFoundException;
-import com.mej.biblioteca.exception.CategoriaVinculadaLivroException;
-import com.mej.biblioteca.model.Categoria;
+import com.mej.biblioteca.dto.categoria.CategoriaRequest;
+import com.mej.biblioteca.dto.categoria.CategoriaResponse;
+import com.mej.biblioteca.exception.domain.CategoriaNomeDuplicadoException;
+import com.mej.biblioteca.exception.domain.CategoriaNotFoundException;
+import com.mej.biblioteca.exception.domain.CategoriaVinculadaLivroException;
+import com.mej.biblioteca.model.entity.Categoria;
 import com.mej.biblioteca.repository.CategoriaRepository;
 import java.util.Collection;
 import java.util.LinkedHashSet;

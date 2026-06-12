@@ -1,6 +1,6 @@
 package com.mej.biblioteca.repository;
 
-import com.mej.biblioteca.model.Categoria;
+import com.mej.biblioteca.model.entity.Categoria;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 

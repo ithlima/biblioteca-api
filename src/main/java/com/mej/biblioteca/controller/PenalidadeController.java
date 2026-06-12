@@ -1,6 +1,6 @@
 package com.mej.biblioteca.controller;
 
-import com.mej.biblioteca.dto.PenalidadeResponse;
+import com.mej.biblioteca.dto.penalidade.PenalidadeResponse;
 import com.mej.biblioteca.service.EmprestimoService;
 import com.mej.biblioteca.service.PenalidadeService;
 import java.util.List;

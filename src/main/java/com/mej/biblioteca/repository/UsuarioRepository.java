@@ -1,7 +1,7 @@
 package com.mej.biblioteca.repository;
 
-import com.mej.biblioteca.model.Role;
-import com.mej.biblioteca.model.Usuario;
+import com.mej.biblioteca.model.enums.Role;
+import com.mej.biblioteca.model.entity.Usuario;
 import jakarta.persistence.LockModeType;
 import java.util.List;
 import java.util.Optional;

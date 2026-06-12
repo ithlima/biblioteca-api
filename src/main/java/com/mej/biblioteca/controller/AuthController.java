@@ -1,12 +1,12 @@
 package com.mej.biblioteca.controller;
 
-import com.mej.biblioteca.dto.AuthCadastroRequest;
-import com.mej.biblioteca.dto.AuthResponse;
-import com.mej.biblioteca.dto.ConfirmarAlteracaoSenhaRequest;
-import com.mej.biblioteca.dto.ConfirmarCadastroRequest;
-import com.mej.biblioteca.dto.LoginRequest;
-import com.mej.biblioteca.dto.ReenviarCodigoRequest;
-import com.mej.biblioteca.dto.SolicitarAlteracaoSenhaRequest;
+import com.mej.biblioteca.dto.auth.AuthCadastroRequest;
+import com.mej.biblioteca.dto.auth.AuthResponse;
+import com.mej.biblioteca.dto.auth.ConfirmarAlteracaoSenhaRequest;
+import com.mej.biblioteca.dto.auth.ConfirmarCadastroRequest;
+import com.mej.biblioteca.dto.auth.LoginRequest;
+import com.mej.biblioteca.dto.auth.ReenviarCodigoRequest;
+import com.mej.biblioteca.dto.auth.SolicitarAlteracaoSenhaRequest;
 import com.mej.biblioteca.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;

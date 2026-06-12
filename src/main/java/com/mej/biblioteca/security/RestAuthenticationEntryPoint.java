@@ -1,7 +1,7 @@
 package com.mej.biblioteca.security;
 
-import com.mej.biblioteca.exception.ApiErrorResponseWriter;
-import com.mej.biblioteca.exception.AutenticacaoNecessariaException;
+import com.mej.biblioteca.exception.handler.ApiErrorResponseWriter;
+import com.mej.biblioteca.exception.domain.AutenticacaoNecessariaException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

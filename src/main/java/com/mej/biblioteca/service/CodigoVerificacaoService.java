@@ -1,8 +1,8 @@
 package com.mej.biblioteca.service;
 
-import com.mej.biblioteca.exception.CodigoVerificacaoInvalidoException;
-import com.mej.biblioteca.model.CodigoVerificacao;
-import com.mej.biblioteca.model.TipoCodigoVerificacao;
+import com.mej.biblioteca.exception.domain.CodigoVerificacaoInvalidoException;
+import com.mej.biblioteca.model.entity.CodigoVerificacao;
+import com.mej.biblioteca.model.enums.TipoCodigoVerificacao;
 import com.mej.biblioteca.repository.CodigoVerificacaoRepository;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;

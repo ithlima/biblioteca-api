@@ -1,7 +1,7 @@
 package com.mej.biblioteca.security;
 
-import com.mej.biblioteca.exception.AcessoNegadoException;
-import com.mej.biblioteca.exception.ApiErrorResponseWriter;
+import com.mej.biblioteca.exception.domain.AcessoNegadoException;
+import com.mej.biblioteca.exception.handler.ApiErrorResponseWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

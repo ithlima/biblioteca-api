@@ -5,8 +5,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.mej.biblioteca.model.Role;
-import com.mej.biblioteca.model.Usuario;
+import com.mej.biblioteca.model.enums.Role;
+import com.mej.biblioteca.model.entity.Usuario;
 import com.mej.biblioteca.repository.UsuarioRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;

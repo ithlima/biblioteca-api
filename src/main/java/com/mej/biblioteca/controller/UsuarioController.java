@@ -1,7 +1,7 @@
 package com.mej.biblioteca.controller;
 
-import com.mej.biblioteca.dto.AlterarRoleRequest;
-import com.mej.biblioteca.dto.UsuarioResponse;
+import com.mej.biblioteca.dto.usuario.AlterarRoleRequest;
+import com.mej.biblioteca.dto.usuario.UsuarioResponse;
 import com.mej.biblioteca.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

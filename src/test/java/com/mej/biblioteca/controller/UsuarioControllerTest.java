@@ -1,8 +1,8 @@
 package com.mej.biblioteca.controller;
 
-import com.mej.biblioteca.dto.UsuarioResponse;
-import com.mej.biblioteca.model.Role;
-import com.mej.biblioteca.model.Usuario;
+import com.mej.biblioteca.dto.usuario.UsuarioResponse;
+import com.mej.biblioteca.model.enums.Role;
+import com.mej.biblioteca.model.entity.Usuario;
 import com.mej.biblioteca.service.UsuarioService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -87,7 +87,7 @@ class UsuarioControllerTest {
     @Test
     void testAlterarRole() {
         UUID id = UUID.randomUUID();
-        com.mej.biblioteca.dto.AlterarRoleRequest req = new com.mej.biblioteca.dto.AlterarRoleRequest("ADMIN");
+        com.mej.biblioteca.dto.usuario.AlterarRoleRequest req = new com.mej.biblioteca.dto.usuario.AlterarRoleRequest("ADMIN");
         UsuarioResponse mockResponse = mock(UsuarioResponse.class);
         when(usuarioService.alterarRole(id, "ADMIN")).thenReturn(mockResponse);
 

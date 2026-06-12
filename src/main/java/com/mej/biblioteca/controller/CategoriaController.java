@@ -1,7 +1,7 @@
 package com.mej.biblioteca.controller;
 
-import com.mej.biblioteca.dto.CategoriaRequest;
-import com.mej.biblioteca.dto.CategoriaResponse;
+import com.mej.biblioteca.dto.categoria.CategoriaRequest;
+import com.mej.biblioteca.dto.categoria.CategoriaResponse;
 import com.mej.biblioteca.service.CategoriaService;
 import jakarta.validation.Valid;
 import java.util.List;
