@@ -65,13 +65,13 @@ public class OpenApiConfig {
                 ));
     }
 
-    private Schema<Object> fieldErrorResponseSchema() {
+    private Schema<?> fieldErrorResponseSchema() {
         return new ObjectSchema()
                 .addProperty("campo", new Schema<String>().type("string"))
                 .addProperty(MENSAGEM_KEY, new Schema<String>().type("string"));
     }
 
-    private Schema<Object> apiErrorResponseSchema() {
+    private Schema<?> apiErrorResponseSchema() {
         return new ObjectSchema()
                 .addProperty("timestamp", new Schema<String>().type("string").format("date-time"))
                 .addProperty("status", new IntegerSchema())

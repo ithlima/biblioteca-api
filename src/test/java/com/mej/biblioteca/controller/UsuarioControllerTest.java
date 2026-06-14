@@ -57,6 +57,7 @@ class UsuarioControllerTest {
     @Test
     void testListar() {
         org.springframework.data.domain.Pageable pageable = mock(org.springframework.data.domain.Pageable.class);
+        @SuppressWarnings("unchecked")
         org.springframework.data.domain.Page<UsuarioResponse> mockPage = mock(org.springframework.data.domain.Page.class);
         when(usuarioService.listar(pageable)).thenReturn(mockPage);
 
