@@ -38,30 +38,30 @@ public class LivroService {
         if (isAdmin(authentication)) {
             if (categoriaId != null) {
                 return livroRepository.findByCategoriasId(categoriaId, pageable)
-                        .map(LivroResponse::from);
+                        .map(livro -> LivroResponse.from(livro, contarEmprestados(livro.getId())));
             }
             return livroRepository.findAll(pageable)
-                    .map(LivroResponse::from);
+                    .map(livro -> LivroResponse.from(livro, contarEmprestados(livro.getId())));
         }
 
         if (categoriaId != null) {
             return livroRepository.findByOcultoFalseAndCategoriasId(categoriaId, pageable)
-                    .map(LivroCatalogoResponse::from);
+                    .map(livro -> LivroCatalogoResponse.from(livro, contarEmprestados(livro.getId())));
         }
         return livroRepository.findByOcultoFalse(pageable)
-                .map(LivroCatalogoResponse::from);
+                .map(livro -> LivroCatalogoResponse.from(livro, contarEmprestados(livro.getId())));
     }
 
     @Transactional(readOnly = true)
     public Object buscar(UUID id, Authentication authentication) {
         Livro livro = buscarEntidade(id);
         if (isAdmin(authentication)) {
-            return LivroResponse.from(livro);
+            return LivroResponse.from(livro, contarEmprestados(livro.getId()));
         }
         if (livro.getOculto()) {
             throw new LivroNotFoundException();
         }
-        return LivroCatalogoResponse.from(livro);
+        return LivroCatalogoResponse.from(livro, contarEmprestados(livro.getId()));
     }
 
     @Transactional
@@ -80,7 +80,7 @@ public class LivroService {
                 .oculto(false)
                 .criadoPor(admin)
                 .build();
-        return LivroResponse.from(livroRepository.save(livro));
+        return LivroResponse.from(livroRepository.save(livro), 0);
     }
 
     @Transactional
@@ -97,7 +97,7 @@ public class LivroService {
         livro.setQuantidade(request.quantidade());
         livro.setFotoCapaUrl(request.fotoCapaUrl());
         livro.setEditadoPor(admin);
-        return LivroResponse.from(livro);
+        return LivroResponse.from(livro, contarEmprestados(livro.getId()));
     }
 
     @Transactional
@@ -119,7 +119,7 @@ public class LivroService {
         livro.setOculto(true);
         livro.setMotivoOcultacao(request.motivoOcultacao());
         livro.setEditadoPor(admin);
-        return LivroResponse.from(livro);
+        return LivroResponse.from(livro, contarEmprestados(livro.getId()));
     }
 
     @Transactional
@@ -129,13 +129,17 @@ public class LivroService {
         livro.setOculto(false);
         livro.setMotivoOcultacao(null);
         livro.setEditadoPor(admin);
-        return LivroResponse.from(livro);
+        return LivroResponse.from(livro, contarEmprestados(livro.getId()));
     }
 
     @Transactional(readOnly = true)
     public Livro buscarEntidade(UUID id) {
         return livroRepository.findById(id)
                 .orElseThrow(LivroNotFoundException::new);
+    }
+
+    private Integer contarEmprestados(UUID livroId) {
+        return (int) emprestimoRepository.countByLivroIdAndStatusIn(livroId, STATUS_COM_LIVRO_FORA);
     }
 
     private boolean isAdmin(Authentication authentication) {

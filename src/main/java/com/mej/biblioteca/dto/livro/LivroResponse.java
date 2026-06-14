@@ -15,6 +15,7 @@ public record LivroResponse(
         String descricao,
         List<CategoriaResponse> categorias,
         Integer quantidade,
+        Integer quantidadeEmprestada,
         String fotoCapaUrl,
         Boolean oculto,
         String motivoOcultacao,
@@ -23,7 +24,7 @@ public record LivroResponse(
         LocalDateTime criadoEm,
         LocalDateTime editadoEm
 ) {
-    public static LivroResponse from(Livro livro) {
+    public static LivroResponse from(Livro livro, Integer quantidadeEmprestada) {
         return new LivroResponse(
                 livro.getId(),
                 livro.getNomeObra(),
@@ -33,6 +34,7 @@ public record LivroResponse(
                 livro.getDescricao(),
                 CategoriaResponse.from(livro.getCategorias()),
                 livro.getQuantidade(),
+                quantidadeEmprestada,
                 livro.getFotoCapaUrl(),
                 livro.getOculto(),
                 livro.getMotivoOcultacao(),

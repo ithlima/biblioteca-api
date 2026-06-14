@@ -14,9 +14,10 @@ public record LivroCatalogoResponse(
         String descricao,
         List<CategoriaResponse> categorias,
         Integer quantidade,
+        Integer quantidadeEmprestada,
         String fotoCapaUrl
 ) {
-    public static LivroCatalogoResponse from(Livro livro) {
+    public static LivroCatalogoResponse from(Livro livro, Integer quantidadeEmprestada) {
         return new LivroCatalogoResponse(
                 livro.getId(),
                 livro.getNomeObra(),
@@ -26,6 +27,7 @@ public record LivroCatalogoResponse(
                 livro.getDescricao(),
                 CategoriaResponse.from(livro.getCategorias()),
                 livro.getQuantidade(),
+                quantidadeEmprestada,
                 livro.getFotoCapaUrl()
         );
     }
