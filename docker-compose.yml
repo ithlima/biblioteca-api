@@ -1,6 +1,18 @@
 version: "3"
 
 services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-biblioteca
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: biblioteca
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
   sonarqube:
     image: sonarqube:latest
     container_name: sonarqube
@@ -14,6 +26,7 @@ services:
       - sonarqube_logs:/opt/sonarqube/logs
 
 volumes:
+  mysql_data:
   sonarqube_data:
   sonarqube_extensions:
   sonarqube_logs:
