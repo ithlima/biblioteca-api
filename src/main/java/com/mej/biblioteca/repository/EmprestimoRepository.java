@@ -19,6 +19,9 @@ public interface EmprestimoRepository extends JpaRepository<Emprestimo, UUID> {
 
     boolean existsByLivroIdAndStatusIn(UUID livroId, Collection<StatusEmprestimo> status);
 
+    long countByLivroIdAndStatusIn(UUID livroId, Collection<StatusEmprestimo> status);
+
+
     @EntityGraph(attributePaths = {"livro", "leitor"})
     Page<Emprestimo> findByLeitorOrderByDataPedidoDesc(Usuario leitor, Pageable pageable);
 
