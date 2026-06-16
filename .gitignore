@@ -1,0 +1,66 @@
+### Maven ###
+target/
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### Node / npm ###
+node_modules/
+npm-debug.log*
+
+### Wrapper ###
+.mvn/wrapper/maven-wrapper.jar
+
+### Logs ###
+*.log
+
+### IDEs ###
+# IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# VS Code
+.vscode/
+
+# Eclipse / STS
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### Sistema Operacional ###
+.DS_Store
+Thumbs.db
+
+### Configurações sensíveis ###
+.env
+.env.*
+!.env.example
+application-local.properties
+**/application-local.properties
+application-dev.properties
+
+### Outros ###
+*.tmp
+*.temp
+*.bak
+*.swp
+
+### Agent temporary files ###
+/*.json
+/*.py
+/robot_tests/results/
