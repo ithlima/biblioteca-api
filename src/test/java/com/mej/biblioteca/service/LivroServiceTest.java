@@ -2,13 +2,10 @@ package com.mej.biblioteca.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.mej.biblioteca.model.entity.Livro;
-import com.mej.biblioteca.model.entity.Usuario;
-import com.mej.biblioteca.model.enums.Role;
 import com.mej.biblioteca.repository.EmprestimoRepository;
 import com.mej.biblioteca.repository.LivroRepository;
 import java.util.List;
@@ -34,12 +31,6 @@ class LivroServiceTest {
 
     @Mock
     private EmprestimoRepository emprestimoRepository;
-
-    @Mock
-    private UsuarioService usuarioService;
-
-    @Mock
-    private CategoriaService categoriaService;
 
     @InjectMocks
     private LivroService livroService;

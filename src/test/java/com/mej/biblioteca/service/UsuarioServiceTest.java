@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -31,8 +29,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class UsuarioServiceTest {
 
-    private static final String MENSAGEM =
-            "Não é permitido remover os privilégios do último administrador do sistema.";
+    private static final String MENSAGEM = "Não é permitido remover os privilégios do último administrador do sistema.";
 
     @Mock
     private UsuarioRepository usuarioRepository;
@@ -44,8 +41,8 @@ class UsuarioServiceTest {
         when(usuarioRepository.findAllAtivosByRoleForUpdate(Role.ADMIN)).thenReturn(List.of(admin));
         when(usuarioRepository.findById(id)).thenReturn(Optional.of(admin));
 
-        UltimoAdministradorException exception =
-                assertThrows(UltimoAdministradorException.class, () -> service().rebaixarLeitor(id));
+        UltimoAdministradorException exception = assertThrows(UltimoAdministradorException.class,
+                () -> service().rebaixarLeitor(id));
 
         assertEquals(MENSAGEM, exception.getMessage());
     }
@@ -57,8 +54,8 @@ class UsuarioServiceTest {
         when(usuarioRepository.findAllAtivosByRoleForUpdate(Role.ADMIN)).thenReturn(List.of(admin));
         when(usuarioRepository.findById(id)).thenReturn(Optional.of(admin));
 
-        UltimoAdministradorException exception =
-                assertThrows(UltimoAdministradorException.class, () -> service().bloquear(id, null));
+        UltimoAdministradorException exception = assertThrows(UltimoAdministradorException.class,
+                () -> service().bloquear(id, null));
 
         assertEquals(MENSAGEM, exception.getMessage());
     }
@@ -67,7 +64,8 @@ class UsuarioServiceTest {
     void bloqueiaUsuarioEAdicionaMotivo() {
         UUID id = UUID.randomUUID();
         Usuario leitor = leitorAtivo(id);
-        when(usuarioRepository.findAllAtivosByRoleForUpdate(Role.ADMIN)).thenReturn(List.of(administradorAtivo(UUID.randomUUID())));
+        when(usuarioRepository.findAllAtivosByRoleForUpdate(Role.ADMIN))
+                .thenReturn(List.of(administradorAtivo(UUID.randomUUID())));
         when(usuarioRepository.findById(id)).thenReturn(Optional.of(leitor));
 
         UsuarioBloquearRequest request = new UsuarioBloquearRequest("Violação de regras");
@@ -85,7 +83,7 @@ class UsuarioServiceTest {
         Usuario leitor = leitorAtivo(id);
         leitor.setLoginBloqueado(true);
         leitor.setMotivoBloqueio("Violação de regras");
-        
+
         when(usuarioRepository.findById(id)).thenReturn(Optional.of(leitor));
 
         UsuarioResponse response = service().desbloquear(id);
@@ -103,7 +101,7 @@ class UsuarioServiceTest {
         Boolean loginBloqueado = false;
         Pageable pageable = PageRequest.of(0, 10);
         Usuario leitor = leitorAtivo(UUID.randomUUID());
-        
+
         when(usuarioRepository.findComFiltros(role, ativo, loginBloqueado, pageable))
                 .thenReturn(new PageImpl<>(List.of(leitor)));
 
