@@ -90,3 +90,17 @@ CT05: GET /livros/{id} deve retornar 404 para ID inexistente
     ...    ${LIVROS_ENDPOINT}/00000000-0000-0000-0000-000000000000
     ...    headers=${headers}    
     ...    expected_status=404
+
+CT06: (ADMIN) GET /livros com filtro oculto=true
+    [Documentation]    Busca os livros ocultos usando o query param oculto=true
+    ${token_admin}=    Gerar Token Admin
+    ${headers}=    Obter Headers Padrao
+    Set To Dictionary  ${headers}    Authorization    Bearer ${token_admin}
+    
+    ${response}=    GET On Session    
+    ...    biblioteca_api    
+    ...    ${LIVROS_ENDPOINT}?oculto=true
+    ...    headers=${headers}    
+    ...    expected_status=200
+
+    Dictionary Should Contain Key    ${response.json()}    content
