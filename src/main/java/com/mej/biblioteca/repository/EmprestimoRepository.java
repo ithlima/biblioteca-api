@@ -5,6 +5,7 @@ import com.mej.biblioteca.model.enums.StatusEmprestimo;
 import com.mej.biblioteca.model.entity.Usuario;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,15 @@ public interface EmprestimoRepository extends JpaRepository<Emprestimo, UUID> {
 
     @EntityGraph(attributePaths = {"livro", "leitor"})
     Page<Emprestimo> findByLeitorOrderByDataPedidoDesc(Usuario leitor, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"livro", "leitor"})
+    Page<Emprestimo> findByLeitorAndStatusInOrderByDataPedidoDesc(Usuario leitor, Collection<StatusEmprestimo> status, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"livro", "leitor"})
+    Optional<Emprestimo> findFirstByLeitorAndStatusIn(Usuario leitor, Collection<StatusEmprestimo> status);
+
+    @EntityGraph(attributePaths = {"livro", "leitor"})
+    Page<Emprestimo> findByStatusInOrderByDataPedidoDesc(Collection<StatusEmprestimo> status, Pageable pageable);
 
     List<Emprestimo> findByStatus(StatusEmprestimo status);
 

@@ -52,14 +52,36 @@ public class EmprestimoController {
         return emprestimoService.devolver(id, authentication);
     }
 
-    @GetMapping("/meus")
-    public Page<EmprestimoResponse> meus(@ParameterObject @PageableDefault(size = 10, sort = "dataPedido", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
-        return emprestimoService.meus(pageable, authentication);
+    @GetMapping("/emprestimo-atual")
+    public EmprestimoResponse obterAtual(Authentication authentication) {
+        return emprestimoService.obterAtual(authentication);
+    }
+
+    @GetMapping("/emprestimos-historico/meus")
+    public Page<EmprestimoResponse> meuHistorico(@ParameterObject @PageableDefault(size = 10, sort = "dataPedido", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
+        return emprestimoService.meuHistorico(pageable, authentication);
+    }
+
+    @GetMapping("/minhas-solicitacoes")
+    public Page<EmprestimoResponse> minhasSolicitacoes(@ParameterObject @PageableDefault(size = 10, sort = "dataPedido", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
+        return emprestimoService.minhasSolicitacoes(pageable, authentication);
+    }
+
+    @GetMapping("/solicitacoes")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Page<EmprestimoResponse> listarSolicitacoesGerais(@ParameterObject @PageableDefault(size = 10, sort = "dataPedido", direction = Sort.Direction.DESC) Pageable pageable) {
+        return emprestimoService.listarSolicitacoesGerais(pageable);
     }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public Page<EmprestimoResponse> listar(@ParameterObject @PageableDefault(size = 10, sort = "dataPedido", direction = Sort.Direction.DESC) Pageable pageable) {
-        return emprestimoService.listar(pageable);
+    public Page<EmprestimoResponse> listarAtivos(@ParameterObject @PageableDefault(size = 10, sort = "dataPedido", direction = Sort.Direction.DESC) Pageable pageable) {
+        return emprestimoService.listarAtivos(pageable);
+    }
+
+    @GetMapping("/historico")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Page<EmprestimoResponse> listarHistoricoGeral(@ParameterObject @PageableDefault(size = 10, sort = "dataPedido", direction = Sort.Direction.DESC) Pageable pageable) {
+        return emprestimoService.listarHistoricoGeral(pageable);
     }
 }

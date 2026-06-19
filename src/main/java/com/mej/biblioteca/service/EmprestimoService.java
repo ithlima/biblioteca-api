@@ -134,15 +134,42 @@ public class EmprestimoService {
     }
 
     @Transactional(readOnly = true)
-    public Page<EmprestimoResponse> meus(Pageable pageable, Authentication authentication) {
+    public EmprestimoResponse obterAtual(Authentication authentication) {
         Usuario leitor = usuarioService.usuarioAutenticado(authentication);
-        return emprestimoRepository.findByLeitorOrderByDataPedidoDesc(leitor, pageable)
+        return emprestimoRepository.findFirstByLeitorAndStatusIn(leitor, List.of(StatusEmprestimo.EMPRESTADO, StatusEmprestimo.ATRASADO))
+                .map(EmprestimoResponse::from)
+                .orElse(null);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<EmprestimoResponse> meuHistorico(Pageable pageable, Authentication authentication) {
+        Usuario leitor = usuarioService.usuarioAutenticado(authentication);
+        return emprestimoRepository.findByLeitorAndStatusInOrderByDataPedidoDesc(leitor, List.of(StatusEmprestimo.DEVOLVIDO, StatusEmprestimo.CANCELADO), pageable)
                 .map(EmprestimoResponse::from);
     }
 
     @Transactional(readOnly = true)
-    public Page<EmprestimoResponse> listar(Pageable pageable) {
-        return emprestimoRepository.findAll(pageable)
+    public Page<EmprestimoResponse> minhasSolicitacoes(Pageable pageable, Authentication authentication) {
+        Usuario leitor = usuarioService.usuarioAutenticado(authentication);
+        return emprestimoRepository.findByLeitorAndStatusInOrderByDataPedidoDesc(leitor, List.of(StatusEmprestimo.SOLICITADO), pageable)
+                .map(EmprestimoResponse::from);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<EmprestimoResponse> listarSolicitacoesGerais(Pageable pageable) {
+        return emprestimoRepository.findByStatusInOrderByDataPedidoDesc(List.of(StatusEmprestimo.SOLICITADO), pageable)
+                .map(EmprestimoResponse::from);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<EmprestimoResponse> listarAtivos(Pageable pageable) {
+        return emprestimoRepository.findByStatusInOrderByDataPedidoDesc(List.of(StatusEmprestimo.EMPRESTADO, StatusEmprestimo.ATRASADO), pageable)
+                .map(EmprestimoResponse::from);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<EmprestimoResponse> listarHistoricoGeral(Pageable pageable) {
+        return emprestimoRepository.findByStatusInOrderByDataPedidoDesc(List.of(StatusEmprestimo.DEVOLVIDO, StatusEmprestimo.CANCELADO), pageable)
                 .map(EmprestimoResponse::from);
     }
 

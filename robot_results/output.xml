@@ -1,0 +1,2007 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.0 (Python 3.12.3 on win32)" generated="2026-06-16T19:39:39.775674" rpa="false" schemaversion="5">
+<suite id="s1" name="Tests" source="C:\Users\Almeida\Documents\biblioteca-api-main\robot_tests\tests">
+<suite id="s1-s1" name="Auth Test" source="C:\Users\Almeida\Documents\biblioteca-api-main\robot_tests\tests\auth_test.robot">
+<kw name="Criar Sessao Biblioteca" owner="api_config" type="SETUP">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:40.251273" level="INFO">Creating Session using : alias=biblioteca_api, url=http://localhost:8080, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<arg>biblioteca_api</arg>
+<arg>${BASE_URL}</arg>
+<arg>verify=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-06-16T19:39:40.250756" elapsed="0.001035"/>
+</kw>
+<status status="PASS" start="2026-06-16T19:39:40.250235" elapsed="0.001556"/>
+</kw>
+<test id="s1-s1-t1" name="CT01: Tentar login com e-mail inexistente deve retornar 401" line="14">
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:40.253931" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:40.253400" elapsed="0.000531"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:40.253931" elapsed="0.000550"/>
+</return>
+<msg time="2026-06-16T19:39:40.254481" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:40.252865" elapsed="0.001616"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:40.255001" level="INFO">${body} = {'identificador': 'naoexiste@gmail.com', 'senha': 'Qualquer123'}</msg>
+<var>${body}</var>
+<arg>identificador=naoexiste@gmail.com</arg>
+<arg>senha=Qualquer123</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:40.255001" elapsed="0.000562"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:41.232042" level="INFO">POST Request : url=http://localhost:8080/auth/login 
+ path_url=/auth/login 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '64'} 
+ body=b'{"identificador": "naoexiste@gmail.com", "senha": "Qualquer123"}' 
+ </msg>
+<msg time="2026-06-16T19:39:41.233038" level="INFO">POST Response : url=http://localhost:8080/auth/login 
+ status=401, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Date': 'Tue, 16 Jun 2026 22:39:41 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"timestamp":"2026-06-16T22:39:41.0633767","status":401,"erro":"Não autorizado","mensagem":"Credenciais inválidas.","path":"/auth/login","campos":[]} 
+ </msg>
+<msg time="2026-06-16T19:39:41.233038" level="INFO">${response} = &lt;Response [401]&gt;</msg>
+<var>${response}</var>
+<arg>biblioteca_api</arg>
+<arg>${LOGIN_ENDPOINT}</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=401</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:40.255563" elapsed="0.977475"/>
+</kw>
+<kw name="Dictionary Should Contain Key" owner="Collections">
+<msg time="2026-06-16T19:39:41.236028" level="INFO">False</msg>
+<arg>${response.json()}</arg>
+<arg>mensagem</arg>
+<doc>Fails if ``key`` is not found from ``dictionary``.</doc>
+<status status="PASS" start="2026-06-16T19:39:41.234035" elapsed="0.002991"/>
+</kw>
+<kw name="Should Be Equal As Strings" owner="BuiltIn">
+<arg>${response.json()}[mensagem]</arg>
+<arg>Credenciais inválidas.</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" start="2026-06-16T19:39:41.237026" elapsed="0.003003"/>
+</kw>
+<doc>Verifica se a API retorna erro 401 (Unauthorized) quando um usuário não cadastrado tenta fazer login.</doc>
+<status status="PASS" start="2026-06-16T19:39:40.252310" elapsed="0.987719"/>
+</test>
+<test id="s1-s1-t2" name="CT02: Tentar cadastrar um usuario com dados invalidos (senha fraca) deve retornar 400" line="29">
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:41.245910" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:41.244228" elapsed="0.001682"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:41.246430" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:41.246948" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:41.243696" elapsed="0.003252"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:41.248085" level="INFO">${body} = {'nomeCompleto': 'Joao Teste', 'email': 'joaoteste@gmail.com', 'telefoneWhatsapp': '85999999999', 'senha': 'fraca'}</msg>
+<var>${body}</var>
+<arg>nomeCompleto=Joao Teste</arg>
+<arg>email=joaoteste@gmail.com</arg>
+<arg>telefoneWhatsapp=85999999999</arg>
+<arg>senha=fraca</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:41.247544" elapsed="0.000541"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:41.319262" level="INFO">POST Request : url=http://localhost:8080/auth/cadastro 
+ path_url=/auth/cadastro 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '115'} 
+ body=b'{"nomeCompleto": "Joao Teste", "email": "joaoteste@gmail.com", "telefoneWhatsapp": "85999999999", "senha": "fraca"}' 
+ </msg>
+<msg time="2026-06-16T19:39:41.319262" level="INFO">POST Response : url=http://localhost:8080/auth/cadastro 
+ status=400, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Date': 'Tue, 16 Jun 2026 22:39:41 GMT', 'Connection': 'close'} 
+ body={"timestamp":"2026-06-16T22:39:41.3112885","status":400,"erro":"Dados inválidos","mensagem":"Um ou mais campos estão inválidos.","path":"/auth/cadastro","campos":[{"campo":"senha","mensagem":"A senha deve ter no minimo 8 caracteres, com letra maiuscula, letra minuscula, numero e simbolo."}]} 
+ </msg>
+<msg time="2026-06-16T19:39:41.319262" level="INFO">${response} = &lt;Response [400]&gt;</msg>
+<var>${response}</var>
+<arg>biblioteca_api</arg>
+<arg>${CADASTRO_ENDPOINT}</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=400</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:41.248604" elapsed="0.071655"/>
+</kw>
+<kw name="Dictionary Should Contain Key" owner="Collections">
+<msg time="2026-06-16T19:39:41.321255" level="INFO">False</msg>
+<arg>${response.json()}</arg>
+<arg>campos</arg>
+<doc>Fails if ``key`` is not found from ``dictionary``.</doc>
+<status status="PASS" start="2026-06-16T19:39:41.320259" elapsed="0.001994"/>
+</kw>
+<doc>Verifica as validacoes do DTO do cadastro (senha muito fraca)</doc>
+<status status="PASS" start="2026-06-16T19:39:41.241098" elapsed="0.081155"/>
+</test>
+<test id="s1-s1-t3" name="CT03: Cadastrar um usuario com sucesso deve retornar 201 Created" line="47">
+<kw name="Generate Random String" owner="String">
+<msg time="2026-06-16T19:39:41.325584" level="INFO">${random_str} = xrlfzp</msg>
+<var>${random_str}</var>
+<arg>6</arg>
+<arg>[LOWER]</arg>
+<doc>Generates a string with a desired ``length`` from the given ``chars``.</doc>
+<status status="PASS" start="2026-06-16T19:39:41.324547" elapsed="0.001037"/>
+</kw>
+<kw name="Generate Random String" owner="String">
+<msg time="2026-06-16T19:39:41.326732" level="INFO">${random_num} = 91988021</msg>
+<var>${random_num}</var>
+<arg>8</arg>
+<arg>[NUMBERS]</arg>
+<doc>Generates a string with a desired ``length`` from the given ``chars``.</doc>
+<status status="PASS" start="2026-06-16T19:39:41.325584" elapsed="0.001148"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-06-16T19:39:41.327712" level="INFO">${email} = joao_xrlfzp@gmail.com</msg>
+<var>${email}</var>
+<arg>joao_${random_str}@gmail.com</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-06-16T19:39:41.327712" elapsed="0.000000"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-06-16T19:39:41.329332" level="INFO">${telefone} = 85991988021</msg>
+<var>${telefone}</var>
+<arg>859${random_num}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-06-16T19:39:41.328709" elapsed="0.000623"/>
+</kw>
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:41.331427" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:41.330433" elapsed="0.001290"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:41.331723" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:41.332308" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:41.329925" elapsed="0.002383"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:41.334010" level="INFO">${body} = {'nomeCompleto': 'Joao Teste da Silva', 'email': 'joao_xrlfzp@gmail.com', 'telefoneWhatsapp': '85991988021', 'senha': 'Teste@123'}</msg>
+<var>${body}</var>
+<arg>nomeCompleto=Joao Teste da Silva</arg>
+<arg>email=${email}</arg>
+<arg>telefoneWhatsapp=${telefone}</arg>
+<arg>senha=Teste@123</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:41.332837" elapsed="0.001777"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:41.764447" level="INFO">POST Request : url=http://localhost:8080/auth/cadastro 
+ path_url=/auth/cadastro 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '130'} 
+ body=b'{"nomeCompleto": "Joao Teste da Silva", "email": "joao_xrlfzp@gmail.com", "telefoneWhatsapp": "85991988021", "senha": "Teste@123"}' 
+ </msg>
+<msg time="2026-06-16T19:39:41.764447" level="INFO">POST Response : url=http://localhost:8080/auth/cadastro 
+ status=201, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '176', 'Date': 'Tue, 16 Jun 2026 22:39:41 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"id":"d701ebad-245e-46a1-9183-d29634aaef41","nomeCompleto":"Joao Teste da Silva","email":"joao_xrlfzp@gmail.com","telefoneWhatsapp":"85991988021","role":"LEITOR","token":null} 
+ </msg>
+<msg time="2026-06-16T19:39:41.765446" level="INFO">${response} = &lt;Response [201]&gt;</msg>
+<var>${response}</var>
+<arg>biblioteca_api</arg>
+<arg>${CADASTRO_ENDPOINT}</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=201</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:41.335136" elapsed="0.430310"/>
+</kw>
+<kw name="Dictionary Should Contain Key" owner="Collections">
+<msg time="2026-06-16T19:39:41.766451" level="INFO">False</msg>
+<arg>${response.json()}</arg>
+<arg>id</arg>
+<doc>Fails if ``key`` is not found from ``dictionary``.</doc>
+<status status="PASS" start="2026-06-16T19:39:41.765446" elapsed="0.001005"/>
+</kw>
+<kw name="Set Global Variable" owner="BuiltIn">
+<msg time="2026-06-16T19:39:41.768435" level="INFO">${NOVO_USUARIO_ID} = d701ebad-245e-46a1-9183-d29634aaef41</msg>
+<arg>${NOVO_USUARIO_ID}</arg>
+<arg>${response.json()}[id]</arg>
+<doc>Makes a variable available globally in all tests and suites.</doc>
+<status status="PASS" start="2026-06-16T19:39:41.766451" elapsed="0.001984"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-06-16T19:39:41.768435" level="INFO">Usuário cadastrado com sucesso! ID: d701ebad-245e-46a1-9183-d29634aaef41</msg>
+<arg>Usuário cadastrado com sucesso! ID: ${NOVO_USUARIO_ID}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-06-16T19:39:41.768435" elapsed="0.000000"/>
+</kw>
+<doc>Verifica se o fluxo feliz de cadastro retorna o Status HTTP 201 e o ID do usuário.</doc>
+<status status="PASS" start="2026-06-16T19:39:41.322885" elapsed="0.445550"/>
+</test>
+<doc>Suite de testes para validar o AuthController (Login e Cadastro)</doc>
+<status status="PASS" start="2026-06-16T19:39:39.862276" elapsed="1.907239"/>
+</suite>
+<suite id="s1-s2" name="Emprestimos Test" source="C:\Users\Almeida\Documents\biblioteca-api-main\robot_tests\tests\emprestimos_test.robot">
+<kw name="Criar Sessao Biblioteca" owner="api_config" type="SETUP">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:41.785082" level="INFO">Creating Session using : alias=biblioteca_api, url=http://localhost:8080, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<arg>biblioteca_api</arg>
+<arg>${BASE_URL}</arg>
+<arg>verify=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-06-16T19:39:41.784887" elapsed="0.000710"/>
+</kw>
+<status status="PASS" start="2026-06-16T19:39:41.784372" elapsed="0.001225"/>
+</kw>
+<test id="s1-s2-t1" name="CT01: (LEITOR) Solicitar emprestimo deve retornar 201 e criar com status SOLICITADO" line="13">
+<kw name="Gerar Token Admin" owner="keywords">
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:41.787933" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:41.787405" elapsed="0.000528"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:41.787933" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:41.788453" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:41.786879" elapsed="0.001574"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:41.789481" level="INFO">${body} = {'identificador': 'admin@biblioteca.com', 'senha': 'Admin@123p'}</msg>
+<var>${body}</var>
+<arg>identificador=${ADMIN_EMAIL}</arg>
+<arg>senha=${ADMIN_PASSWORD}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:41.788973" elapsed="0.000541"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:42.170165" level="INFO">POST Request : url=http://localhost:8080/auth/login 
+ path_url=/auth/login 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '64'} 
+ body=b'{"identificador": "admin@biblioteca.com", "senha": "Admin@123p"}' 
+ </msg>
+<msg time="2026-06-16T19:39:42.170165" level="INFO">POST Response : url=http://localhost:8080/auth/login 
+ status=200, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '316', 'Date': 'Tue, 16 Jun 2026 22:39:42 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"id":"2ac2779a-4838-430d-9d1d-562cd6eb9528","nomeCompleto":"Administrador Inicial","email":"admin@biblioteca.com","telefoneWhatsapp":null,"role":"ADMIN","token":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4MSwiZXhwIjoxNzgxNzM1OTgxfQ.xSMew6VPLv032ch0t888P5CiUdbe9fAEYyHkjeOJD1w"} 
+ </msg>
+<msg time="2026-06-16T19:39:42.171161" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>biblioteca_api</arg>
+<arg>/auth/login</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:41.789514" elapsed="0.381647"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-06-16T19:39:42.172158" level="INFO">${token} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4MSwiZXhwIjoxNzgxNzM1OTgxfQ.xSMew6VPLv032ch0t888P5CiUdbe9fAEYyHkjeOJD1w</msg>
+<var>${token}</var>
+<arg>${response.json()}[token]</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.171161" elapsed="0.000997"/>
+</kw>
+<return>
+<value>${token}</value>
+<status status="PASS" start="2026-06-16T19:39:42.173154" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:42.173154" level="INFO">${token_admin} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4MSwiZXhwIjoxNzgxNzM1OTgxfQ.xSMew6VPLv032ch0t888P5CiUdbe9fAEYyHkjeOJD1w</msg>
+<var>${token_admin}</var>
+<doc>Faz login com a conta de administrador (criada pelo ambiente) e retorna o token JWT</doc>
+<status status="PASS" start="2026-06-16T19:39:41.786356" elapsed="0.386798"/>
+</kw>
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:42.174151" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.174151" elapsed="0.000000"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:42.174151" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:42.175148" level="INFO">${headers_admin} = {'Content-Type': 'application/json'}</msg>
+<var>${headers_admin}</var>
+<status status="PASS" start="2026-06-16T19:39:42.173154" elapsed="0.001994"/>
+</kw>
+<kw name="Set To Dictionary" owner="Collections">
+<arg>${headers_admin}</arg>
+<arg>Authorization</arg>
+<arg>Bearer ${token_admin}</arg>
+<doc>Adds the given ``key_value_pairs`` and/or ``items`` to the ``dictionary``.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.175148" elapsed="0.000000"/>
+</kw>
+<kw name="Create List" owner="BuiltIn">
+<msg time="2026-06-16T19:39:42.175148" level="INFO">${lista_vazia} = []</msg>
+<var>${lista_vazia}</var>
+<doc>Returns a list containing given items.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.175148" elapsed="0.000000"/>
+</kw>
+<kw name="Generate Random String" owner="String">
+<msg time="2026-06-16T19:39:42.176145" level="INFO">${random_str} = FUNX</msg>
+<var>${random_str}</var>
+<arg>4</arg>
+<arg>[UPPER]</arg>
+<doc>Generates a string with a desired ``length`` from the given ``chars``.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.176145" elapsed="0.000000"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:42.176145" level="INFO">${body_livro} = {'nomeObra': 'Livro Emprestimo FUNX', 'autor': 'Autor Ficticio', 'editora': 'Editora Robot', 'volume': '1', 'descricao': 'Livro de Teste', 'categoriasIds': [], 'quantidade': '1', 'fotoCapaUrl': 'https...</msg>
+<var>${body_livro}</var>
+<arg>nomeObra=Livro Emprestimo ${random_str}</arg>
+<arg>autor=Autor Ficticio</arg>
+<arg>editora=Editora Robot</arg>
+<arg>volume=1</arg>
+<arg>descricao=Livro de Teste</arg>
+<arg>categoriasIds=${lista_vazia}</arg>
+<arg>quantidade=1</arg>
+<arg>fotoCapaUrl=https://res.cloudinary.com/teste/image.webp</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.176145" elapsed="0.000000"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:42.378866" level="INFO">POST Request : url=http://localhost:8080/livros 
+ path_url=/livros 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4MSwiZXhwIjoxNzgxNzM1OTgxfQ.xSMew6VPLv032ch0t888P5CiUdbe9fAEYyHkjeOJD1w', 'Content-Length': '240'} 
+ body=b'{"nomeObra": "Livro Emprestimo FUNX", "autor": "Autor Ficticio", "editora": "Editora Robot", "volume": "1", "descricao": "Livro de Teste", "categoriasIds": [], "quantidade": "1", "fotoCapaUrl": "https://res.cloudinary.com/teste/image.webp"}' 
+ </msg>
+<msg time="2026-06-16T19:39:42.379874" level="INFO">POST Response : url=http://localhost:8080/livros 
+ status=201, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '458', 'Date': 'Tue, 16 Jun 2026 22:39:42 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"id":"56ecaa46-8065-4ef8-bcef-c3ae39ec1526","nomeObra":"Livro Emprestimo FUNX","autor":"Autor Ficticio","editora":"Editora Robot","volume":"1","descricao":"Livro de Teste","categorias":[],"quantidade":1,"quantidadeEmprestada":0,"fotoCapaUrl":"https://res.cloudinary.com/teste/image.webp","oculto":false,"motivoOcultacao":null,"criadoPorId":"2ac2779a-4838-430d-9d1d-562cd6eb9528","editadoPorId":null,"criadoEm":"2026-06-16T22:39:42.3390216","editadoEm":null} 
+ </msg>
+<msg time="2026-06-16T19:39:42.379874" level="INFO">${res_livro} = &lt;Response [201]&gt;</msg>
+<var>${res_livro}</var>
+<arg>biblioteca_api</arg>
+<arg>/livros</arg>
+<arg>json=${body_livro}</arg>
+<arg>headers=${headers_admin}</arg>
+<arg>expected_status=201</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.177150" elapsed="0.202724"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-06-16T19:39:42.380858" level="INFO">${livro_id} = 56ecaa46-8065-4ef8-bcef-c3ae39ec1526</msg>
+<var>${livro_id}</var>
+<arg>${res_livro.json()}[id]</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.379874" elapsed="0.000984"/>
+</kw>
+<kw name="Gerar Token Leitor" owner="keywords">
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:42.383862" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.383862" elapsed="0.000000"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:42.384855" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:42.384855" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:42.382852" elapsed="0.002003"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:42.385850" level="INFO">${body} = {'identificador': 'leitor@biblioteca.com', 'senha': 'Leitor@123'}</msg>
+<var>${body}</var>
+<arg>identificador=${LEITOR_EMAIL}</arg>
+<arg>senha=${LEITOR_PASSWORD}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.384855" elapsed="0.000995"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:42.547920" level="INFO">POST Request : url=http://localhost:8080/auth/login 
+ path_url=/auth/login 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '65'} 
+ body=b'{"identificador": "leitor@biblioteca.com", "senha": "Leitor@123"}' 
+ </msg>
+<msg time="2026-06-16T19:39:42.547920" level="INFO">POST Response : url=http://localhost:8080/auth/login 
+ status=200, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '323', 'Date': 'Tue, 16 Jun 2026 22:39:42 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"id":"7dc70605-8290-456b-8f14-acda71c73c38","nomeCompleto":"Leitor de Testes","email":"leitor@biblioteca.com","telefoneWhatsapp":"85900000000","role":"LEITOR","token":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODIsImV4cCI6MTc4MTczNTk4Mn0.AwXhPFAAlJk-NS92fux1dXz-ZHZvk-mNqGkSD27thSA"} 
+ </msg>
+<msg time="2026-06-16T19:39:42.547920" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>biblioteca_api</arg>
+<arg>/auth/login</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.385850" elapsed="0.162070"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-06-16T19:39:42.548917" level="INFO">${token} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODIsImV4cCI6MTc4MTczNTk4Mn0.AwXhPFAAlJk-NS92fux1dXz-ZHZvk-mNqGkSD27thSA</msg>
+<var>${token}</var>
+<arg>${response.json()}[token]</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.548917" elapsed="0.000000"/>
+</kw>
+<return>
+<value>${token}</value>
+<status status="PASS" start="2026-06-16T19:39:42.549914" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:42.549914" level="INFO">${token_leitor} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODIsImV4cCI6MTc4MTczNTk4Mn0.AwXhPFAAlJk-NS92fux1dXz-ZHZvk-mNqGkSD27thSA</msg>
+<var>${token_leitor}</var>
+<doc>Faz login com a conta de leitor de testes (criada pelo DatabaseSeeder) e retorna o token JWT</doc>
+<status status="PASS" start="2026-06-16T19:39:42.381856" elapsed="0.168058"/>
+</kw>
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:42.550910" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.549914" elapsed="0.000996"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:42.550910" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:42.550910" level="INFO">${headers_leitor} = {'Content-Type': 'application/json'}</msg>
+<var>${headers_leitor}</var>
+<status status="PASS" start="2026-06-16T19:39:42.549914" elapsed="0.000996"/>
+</kw>
+<kw name="Set To Dictionary" owner="Collections">
+<arg>${headers_leitor}</arg>
+<arg>Authorization</arg>
+<arg>Bearer ${token_leitor}</arg>
+<doc>Adds the given ``key_value_pairs`` and/or ``items`` to the ``dictionary``.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.550910" elapsed="0.000000"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:42.551918" level="INFO">${body_req} = {'livroId': '56ecaa46-8065-4ef8-bcef-c3ae39ec1526'}</msg>
+<var>${body_req}</var>
+<arg>livroId=${livro_id}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.550910" elapsed="0.001008"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:42.643933" level="INFO">POST Request : url=http://localhost:8080/emprestimos/solicitar 
+ path_url=/emprestimos/solicitar 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODIsImV4cCI6MTc4MTczNTk4Mn0.AwXhPFAAlJk-NS92fux1dXz-ZHZvk-mNqGkSD27thSA', 'Content-Length': '51'} 
+ body=b'{"livroId": "56ecaa46-8065-4ef8-bcef-c3ae39ec1526"}' 
+ </msg>
+<msg time="2026-06-16T19:39:42.643933" level="INFO">POST Response : url=http://localhost:8080/emprestimos/solicitar 
+ status=201, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '377', 'Date': 'Tue, 16 Jun 2026 22:39:42 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"id":"45103169-8f70-4a75-a9ad-fe244da1facd","livroId":"56ecaa46-8065-4ef8-bcef-c3ae39ec1526","nomeObra":"Livro Emprestimo FUNX","leitorId":"7dc70605-8290-456b-8f14-acda71c73c38","nomeLeitor":"Leitor de Testes","dataPedido":"2026-06-16T22:39:42.6299804","dataEmprestimo":null,"dataDevolucaoPrevista":null,"dataDevolucaoReal":null,"quantidadeRenovacoes":0,"status":"SOLICITADO"} 
+ </msg>
+<msg time="2026-06-16T19:39:42.643933" level="INFO">${res_emprestimo} = &lt;Response [201]&gt;</msg>
+<var>${res_emprestimo}</var>
+<arg>biblioteca_api</arg>
+<arg>${EMPRESTIMOS_ENDPOINT}/solicitar</arg>
+<arg>json=${body_req}</arg>
+<arg>headers=${headers_leitor}</arg>
+<arg>expected_status=201</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.551918" elapsed="0.092015"/>
+</kw>
+<kw name="Dictionary Should Contain Key" owner="Collections">
+<msg time="2026-06-16T19:39:42.644938" level="INFO">False</msg>
+<arg>${res_emprestimo.json()}</arg>
+<arg>id</arg>
+<doc>Fails if ``key`` is not found from ``dictionary``.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.643933" elapsed="0.001005"/>
+</kw>
+<kw name="Should Be Equal As Strings" owner="BuiltIn">
+<arg>${res_emprestimo.json()}[status]</arg>
+<arg>SOLICITADO</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.644938" elapsed="0.000996"/>
+</kw>
+<kw name="Set Global Variable" owner="BuiltIn">
+<msg time="2026-06-16T19:39:42.647921" level="INFO">${EMPRESTIMO_ID} = 45103169-8f70-4a75-a9ad-fe244da1facd</msg>
+<arg>${EMPRESTIMO_ID}</arg>
+<arg>${res_emprestimo.json()}[id]</arg>
+<doc>Makes a variable available globally in all tests and suites.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.645934" elapsed="0.001987"/>
+</kw>
+<doc>Testa a criação do empréstimo validando a regra do estoque e status</doc>
+<status status="PASS" start="2026-06-16T19:39:41.785597" elapsed="0.862324"/>
+</test>
+<test id="s1-s2-t2" name="CT02: (ADMIN) Emprestar livro deve retornar 200, diminuir quantidade e mudar status para EMPRESTADO" line="38">
+<kw name="Gerar Token Admin" owner="keywords">
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:42.649547" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.649547" elapsed="0.000000"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:42.649547" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:42.650055" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:42.649028" elapsed="0.001047"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:42.650075" level="INFO">${body} = {'identificador': 'admin@biblioteca.com', 'senha': 'Admin@123p'}</msg>
+<var>${body}</var>
+<arg>identificador=${ADMIN_EMAIL}</arg>
+<arg>senha=${ADMIN_PASSWORD}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.650075" elapsed="0.000000"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:42.796777" level="INFO">POST Request : url=http://localhost:8080/auth/login 
+ path_url=/auth/login 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '64'} 
+ body=b'{"identificador": "admin@biblioteca.com", "senha": "Admin@123p"}' 
+ </msg>
+<msg time="2026-06-16T19:39:42.796777" level="INFO">POST Response : url=http://localhost:8080/auth/login 
+ status=200, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '316', 'Date': 'Tue, 16 Jun 2026 22:39:42 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"id":"2ac2779a-4838-430d-9d1d-562cd6eb9528","nomeCompleto":"Administrador Inicial","email":"admin@biblioteca.com","telefoneWhatsapp":null,"role":"ADMIN","token":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4MiwiZXhwIjoxNzgxNzM1OTgyfQ.P2o4WNpZAtnIKAUYoGm-1CWEqk23deH0RH_DL8mC2lM"} 
+ </msg>
+<msg time="2026-06-16T19:39:42.796777" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>biblioteca_api</arg>
+<arg>/auth/login</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.650592" elapsed="0.146185"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-06-16T19:39:42.797773" level="INFO">${token} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4MiwiZXhwIjoxNzgxNzM1OTgyfQ.P2o4WNpZAtnIKAUYoGm-1CWEqk23deH0RH_DL8mC2lM</msg>
+<var>${token}</var>
+<arg>${response.json()}[token]</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.797773" elapsed="0.000000"/>
+</kw>
+<return>
+<value>${token}</value>
+<status status="PASS" start="2026-06-16T19:39:42.797773" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:42.797773" level="INFO">${token_admin} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4MiwiZXhwIjoxNzgxNzM1OTgyfQ.P2o4WNpZAtnIKAUYoGm-1CWEqk23deH0RH_DL8mC2lM</msg>
+<var>${token_admin}</var>
+<doc>Faz login com a conta de administrador (criada pelo ambiente) e retorna o token JWT</doc>
+<status status="PASS" start="2026-06-16T19:39:42.649028" elapsed="0.148745"/>
+</kw>
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:42.798773" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.798773" elapsed="0.000000"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:42.798773" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:42.798773" level="INFO">${headers_admin} = {'Content-Type': 'application/json'}</msg>
+<var>${headers_admin}</var>
+<status status="PASS" start="2026-06-16T19:39:42.798773" elapsed="0.000000"/>
+</kw>
+<kw name="Set To Dictionary" owner="Collections">
+<arg>${headers_admin}</arg>
+<arg>Authorization</arg>
+<arg>Bearer ${token_admin}</arg>
+<doc>Adds the given ``key_value_pairs`` and/or ``items`` to the ``dictionary``.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.798773" elapsed="0.000994"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:42.862557" level="INFO">POST Request : url=http://localhost:8080/emprestimos/45103169-8f70-4a75-a9ad-fe244da1facd/emprestar 
+ path_url=/emprestimos/45103169-8f70-4a75-a9ad-fe244da1facd/emprestar 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4MiwiZXhwIjoxNzgxNzM1OTgyfQ.P2o4WNpZAtnIKAUYoGm-1CWEqk23deH0RH_DL8mC2lM', 'Content-Length': '0'} 
+ body=None 
+ </msg>
+<msg time="2026-06-16T19:39:42.863567" level="INFO">POST Response : url=http://localhost:8080/emprestimos/45103169-8f70-4a75-a9ad-fe244da1facd/emprestar 
+ status=200, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '385', 'Date': 'Tue, 16 Jun 2026 22:39:42 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"id":"45103169-8f70-4a75-a9ad-fe244da1facd","livroId":"56ecaa46-8065-4ef8-bcef-c3ae39ec1526","nomeObra":"Livro Emprestimo FUNX","leitorId":"7dc70605-8290-456b-8f14-acda71c73c38","nomeLeitor":"Leitor de Testes","dataPedido":"2026-06-16T22:39:42","dataEmprestimo":"2026-06-16","dataDevolucaoPrevista":"2026-07-01","dataDevolucaoReal":null,"quantidadeRenovacoes":0,"status":"EMPRESTADO"} 
+ </msg>
+<msg time="2026-06-16T19:39:42.863567" level="INFO">${res_emprestar} = &lt;Response [200]&gt;</msg>
+<var>${res_emprestar}</var>
+<arg>biblioteca_api</arg>
+<arg>${EMPRESTIMOS_ENDPOINT}/${EMPRESTIMO_ID}/emprestar</arg>
+<arg>headers=${headers_admin}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.799767" elapsed="0.063800"/>
+</kw>
+<kw name="Should Be Equal As Strings" owner="BuiltIn">
+<arg>${res_emprestar.json()}[status]</arg>
+<arg>EMPRESTADO</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.863567" elapsed="0.000983"/>
+</kw>
+<doc>Testa a aprovação do empréstimo</doc>
+<status status="PASS" start="2026-06-16T19:39:42.648508" elapsed="0.216042"/>
+</test>
+<test id="s1-s2-t3" name="CT03: (LEITOR/ADMIN) Renovar livro deve aumentar a data de devolucao" line="47">
+<kw name="Gerar Token Leitor" owner="keywords">
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:42.866622" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.866094" elapsed="0.000528"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:42.866622" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:42.866622" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:42.865584" elapsed="0.001038"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:42.867142" level="INFO">${body} = {'identificador': 'leitor@biblioteca.com', 'senha': 'Leitor@123'}</msg>
+<var>${body}</var>
+<arg>identificador=${LEITOR_EMAIL}</arg>
+<arg>senha=${LEITOR_PASSWORD}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.867142" elapsed="0.000000"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:43.032934" level="INFO">POST Request : url=http://localhost:8080/auth/login 
+ path_url=/auth/login 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '65'} 
+ body=b'{"identificador": "leitor@biblioteca.com", "senha": "Leitor@123"}' 
+ </msg>
+<msg time="2026-06-16T19:39:43.032934" level="INFO">POST Response : url=http://localhost:8080/auth/login 
+ status=200, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '323', 'Date': 'Tue, 16 Jun 2026 22:39:43 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"id":"7dc70605-8290-456b-8f14-acda71c73c38","nomeCompleto":"Leitor de Testes","email":"leitor@biblioteca.com","telefoneWhatsapp":"85900000000","role":"LEITOR","token":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODMsImV4cCI6MTc4MTczNTk4M30.rxk9zJrjsIZ34uHoKEihvibY5eIdsslJeUNtmh11UAE"} 
+ </msg>
+<msg time="2026-06-16T19:39:43.032934" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>biblioteca_api</arg>
+<arg>/auth/login</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:42.867665" elapsed="0.165269"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.033930" level="INFO">${token} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODMsImV4cCI6MTc4MTczNTk4M30.rxk9zJrjsIZ34uHoKEihvibY5eIdsslJeUNtmh11UAE</msg>
+<var>${token}</var>
+<arg>${response.json()}[token]</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.032934" elapsed="0.000996"/>
+</kw>
+<return>
+<value>${token}</value>
+<status status="PASS" start="2026-06-16T19:39:43.033930" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:43.034927" level="INFO">${token_leitor} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODMsImV4cCI6MTc4MTczNTk4M30.rxk9zJrjsIZ34uHoKEihvibY5eIdsslJeUNtmh11UAE</msg>
+<var>${token_leitor}</var>
+<doc>Faz login com a conta de leitor de testes (criada pelo DatabaseSeeder) e retorna o token JWT</doc>
+<status status="PASS" start="2026-06-16T19:39:42.865584" elapsed="0.169343"/>
+</kw>
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.034927" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.034927" elapsed="0.000000"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:43.034927" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:43.035923" level="INFO">${headers_leitor} = {'Content-Type': 'application/json'}</msg>
+<var>${headers_leitor}</var>
+<status status="PASS" start="2026-06-16T19:39:43.034927" elapsed="0.000996"/>
+</kw>
+<kw name="Set To Dictionary" owner="Collections">
+<arg>${headers_leitor}</arg>
+<arg>Authorization</arg>
+<arg>Bearer ${token_leitor}</arg>
+<doc>Adds the given ``key_value_pairs`` and/or ``items`` to the ``dictionary``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.035923" elapsed="0.000000"/>
+</kw>
+<kw name="PATCH On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:43.065825" level="INFO">PATCH Request : url=http://localhost:8080/emprestimos/45103169-8f70-4a75-a9ad-fe244da1facd/renovar 
+ path_url=/emprestimos/45103169-8f70-4a75-a9ad-fe244da1facd/renovar 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODMsImV4cCI6MTc4MTczNTk4M30.rxk9zJrjsIZ34uHoKEihvibY5eIdsslJeUNtmh11UAE', 'Content-Length': '0'} 
+ body=None 
+ </msg>
+<msg time="2026-06-16T19:39:43.065825" level="INFO">PATCH Response : url=http://localhost:8080/emprestimos/45103169-8f70-4a75-a9ad-fe244da1facd/renovar 
+ status=200, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '385', 'Date': 'Tue, 16 Jun 2026 22:39:43 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"id":"45103169-8f70-4a75-a9ad-fe244da1facd","livroId":"56ecaa46-8065-4ef8-bcef-c3ae39ec1526","nomeObra":"Livro Emprestimo FUNX","leitorId":"7dc70605-8290-456b-8f14-acda71c73c38","nomeLeitor":"Leitor de Testes","dataPedido":"2026-06-16T22:39:42","dataEmprestimo":"2026-06-16","dataDevolucaoPrevista":"2026-07-16","dataDevolucaoReal":null,"quantidadeRenovacoes":1,"status":"EMPRESTADO"} 
+ </msg>
+<msg time="2026-06-16T19:39:43.065825" level="INFO">${res_renovar} = &lt;Response [200]&gt;</msg>
+<var>${res_renovar}</var>
+<arg>biblioteca_api</arg>
+<arg>${EMPRESTIMOS_ENDPOINT}/${EMPRESTIMO_ID}/renovar</arg>
+<arg>headers=${headers_leitor}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a PATCH request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.035923" elapsed="0.029902"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.066821" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${res_renovar.json()}[quantidadeRenovacoes]</arg>
+<arg>1</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.065825" elapsed="0.000996"/>
+</kw>
+<doc>Testa a renovação do empréstimo em andamento</doc>
+<status status="PASS" start="2026-06-16T19:39:42.865063" elapsed="0.201758"/>
+</test>
+<test id="s1-s2-t4" name="CT04: (LEITOR/ADMIN) Devolver livro deve retornar 200 e mudar status para DEVOLVIDO" line="56">
+<kw name="Gerar Token Leitor" owner="keywords">
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.068675" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.068675" elapsed="0.000000"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:43.068675" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:43.069080" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:43.068165" elapsed="0.000915"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.069617" level="INFO">${body} = {'identificador': 'leitor@biblioteca.com', 'senha': 'Leitor@123'}</msg>
+<var>${body}</var>
+<arg>identificador=${LEITOR_EMAIL}</arg>
+<arg>senha=${LEITOR_PASSWORD}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.069080" elapsed="0.000537"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:43.226343" level="INFO">POST Request : url=http://localhost:8080/auth/login 
+ path_url=/auth/login 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '65'} 
+ body=b'{"identificador": "leitor@biblioteca.com", "senha": "Leitor@123"}' 
+ </msg>
+<msg time="2026-06-16T19:39:43.226343" level="INFO">POST Response : url=http://localhost:8080/auth/login 
+ status=200, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '323', 'Date': 'Tue, 16 Jun 2026 22:39:43 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"id":"7dc70605-8290-456b-8f14-acda71c73c38","nomeCompleto":"Leitor de Testes","email":"leitor@biblioteca.com","telefoneWhatsapp":"85900000000","role":"LEITOR","token":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODMsImV4cCI6MTc4MTczNTk4M30.rxk9zJrjsIZ34uHoKEihvibY5eIdsslJeUNtmh11UAE"} 
+ </msg>
+<msg time="2026-06-16T19:39:43.226343" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>biblioteca_api</arg>
+<arg>/auth/login</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.069617" elapsed="0.156726"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.227347" level="INFO">${token} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODMsImV4cCI6MTc4MTczNTk4M30.rxk9zJrjsIZ34uHoKEihvibY5eIdsslJeUNtmh11UAE</msg>
+<var>${token}</var>
+<arg>${response.json()}[token]</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.226343" elapsed="0.001004"/>
+</kw>
+<return>
+<value>${token}</value>
+<status status="PASS" start="2026-06-16T19:39:43.227347" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:43.227347" level="INFO">${token_leitor} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODMsImV4cCI6MTc4MTczNTk4M30.rxk9zJrjsIZ34uHoKEihvibY5eIdsslJeUNtmh11UAE</msg>
+<var>${token_leitor}</var>
+<doc>Faz login com a conta de leitor de testes (criada pelo DatabaseSeeder) e retorna o token JWT</doc>
+<status status="PASS" start="2026-06-16T19:39:43.068165" elapsed="0.159182"/>
+</kw>
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.228335" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.228335" elapsed="0.000000"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:43.228335" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:43.228335" level="INFO">${headers_leitor} = {'Content-Type': 'application/json'}</msg>
+<var>${headers_leitor}</var>
+<status status="PASS" start="2026-06-16T19:39:43.228335" elapsed="0.001008"/>
+</kw>
+<kw name="Set To Dictionary" owner="Collections">
+<arg>${headers_leitor}</arg>
+<arg>Authorization</arg>
+<arg>Bearer ${token_leitor}</arg>
+<doc>Adds the given ``key_value_pairs`` and/or ``items`` to the ``dictionary``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.229343" elapsed="0.000000"/>
+</kw>
+<kw name="PATCH On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:43.261225" level="INFO">PATCH Request : url=http://localhost:8080/emprestimos/45103169-8f70-4a75-a9ad-fe244da1facd/devolver 
+ path_url=/emprestimos/45103169-8f70-4a75-a9ad-fe244da1facd/devolver 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODMsImV4cCI6MTc4MTczNTk4M30.rxk9zJrjsIZ34uHoKEihvibY5eIdsslJeUNtmh11UAE', 'Content-Length': '0'} 
+ body=None 
+ </msg>
+<msg time="2026-06-16T19:39:43.261225" level="INFO">PATCH Response : url=http://localhost:8080/emprestimos/45103169-8f70-4a75-a9ad-fe244da1facd/devolver 
+ status=200, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '392', 'Date': 'Tue, 16 Jun 2026 22:39:43 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"id":"45103169-8f70-4a75-a9ad-fe244da1facd","livroId":"56ecaa46-8065-4ef8-bcef-c3ae39ec1526","nomeObra":"Livro Emprestimo FUNX","leitorId":"7dc70605-8290-456b-8f14-acda71c73c38","nomeLeitor":"Leitor de Testes","dataPedido":"2026-06-16T22:39:42","dataEmprestimo":"2026-06-16","dataDevolucaoPrevista":"2026-07-16","dataDevolucaoReal":"2026-06-16","quantidadeRenovacoes":1,"status":"DEVOLVIDO"} 
+ </msg>
+<msg time="2026-06-16T19:39:43.262233" level="INFO">${res_devolver} = &lt;Response [200]&gt;</msg>
+<var>${res_devolver}</var>
+<arg>biblioteca_api</arg>
+<arg>${EMPRESTIMOS_ENDPOINT}/${EMPRESTIMO_ID}/devolver</arg>
+<arg>headers=${headers_leitor}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a PATCH request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.229343" elapsed="0.032890"/>
+</kw>
+<kw name="Should Be Equal As Strings" owner="BuiltIn">
+<arg>${res_devolver.json()}[status]</arg>
+<arg>DEVOLVIDO</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.262233" elapsed="0.000995"/>
+</kw>
+<doc>Testa a devolução do empréstimo</doc>
+<status status="PASS" start="2026-06-16T19:39:43.067639" elapsed="0.195589"/>
+</test>
+<test id="s1-s2-t5" name="CT05: Solicitar emprestimo de livro sem estoque deve retornar 400 Bad Request" line="65">
+<kw name="Gerar Token Admin" owner="keywords">
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.264797" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.264797" elapsed="0.000000"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:43.265313" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:43.265313" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:43.264266" elapsed="0.001047"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.265862" level="INFO">${body} = {'identificador': 'admin@biblioteca.com', 'senha': 'Admin@123p'}</msg>
+<var>${body}</var>
+<arg>identificador=${ADMIN_EMAIL}</arg>
+<arg>senha=${ADMIN_PASSWORD}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.265313" elapsed="0.000549"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:43.423632" level="INFO">POST Request : url=http://localhost:8080/auth/login 
+ path_url=/auth/login 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '64'} 
+ body=b'{"identificador": "admin@biblioteca.com", "senha": "Admin@123p"}' 
+ </msg>
+<msg time="2026-06-16T19:39:43.423632" level="INFO">POST Response : url=http://localhost:8080/auth/login 
+ status=200, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '316', 'Date': 'Tue, 16 Jun 2026 22:39:43 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"id":"2ac2779a-4838-430d-9d1d-562cd6eb9528","nomeCompleto":"Administrador Inicial","email":"admin@biblioteca.com","telefoneWhatsapp":null,"role":"ADMIN","token":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4MywiZXhwIjoxNzgxNzM1OTgzfQ.T9sWlaf4iiQZxtBpCOLuCrVvUSa2Aq_DMNWKMKuiD2o"} 
+ </msg>
+<msg time="2026-06-16T19:39:43.423632" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>biblioteca_api</arg>
+<arg>/auth/login</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.265862" elapsed="0.157770"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.424625" level="INFO">${token} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4MywiZXhwIjoxNzgxNzM1OTgzfQ.T9sWlaf4iiQZxtBpCOLuCrVvUSa2Aq_DMNWKMKuiD2o</msg>
+<var>${token}</var>
+<arg>${response.json()}[token]</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.423632" elapsed="0.000993"/>
+</kw>
+<return>
+<value>${token}</value>
+<status status="PASS" start="2026-06-16T19:39:43.424625" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:43.424625" level="INFO">${token_admin} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4MywiZXhwIjoxNzgxNzM1OTgzfQ.T9sWlaf4iiQZxtBpCOLuCrVvUSa2Aq_DMNWKMKuiD2o</msg>
+<var>${token_admin}</var>
+<doc>Faz login com a conta de administrador (criada pelo ambiente) e retorna o token JWT</doc>
+<status status="PASS" start="2026-06-16T19:39:43.264266" elapsed="0.160359"/>
+</kw>
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.425630" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.425630" elapsed="0.000000"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:43.425630" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:43.425630" level="INFO">${headers_admin} = {'Content-Type': 'application/json'}</msg>
+<var>${headers_admin}</var>
+<status status="PASS" start="2026-06-16T19:39:43.424625" elapsed="0.001005"/>
+</kw>
+<kw name="Set To Dictionary" owner="Collections">
+<arg>${headers_admin}</arg>
+<arg>Authorization</arg>
+<arg>Bearer ${token_admin}</arg>
+<doc>Adds the given ``key_value_pairs`` and/or ``items`` to the ``dictionary``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.425630" elapsed="0.000000"/>
+</kw>
+<kw name="Create List" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.426626" level="INFO">${lista_vazia} = []</msg>
+<var>${lista_vazia}</var>
+<doc>Returns a list containing given items.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.425630" elapsed="0.000996"/>
+</kw>
+<kw name="Generate Random String" owner="String">
+<msg time="2026-06-16T19:39:43.426626" level="INFO">${random_str} = JSKW</msg>
+<var>${random_str}</var>
+<arg>4</arg>
+<arg>[UPPER]</arg>
+<doc>Generates a string with a desired ``length`` from the given ``chars``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.426626" elapsed="0.000000"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.426626" level="INFO">${body_livro} = {'nomeObra': 'Livro Sem Estoque JSKW', 'autor': 'Autor', 'editora': 'Editora', 'volume': '1', 'descricao': 'Descricao', 'categoriasIds': [], 'quantidade': '0', 'fotoCapaUrl': 'https://res.cloudinary.c...</msg>
+<var>${body_livro}</var>
+<arg>nomeObra=Livro Sem Estoque ${random_str}</arg>
+<arg>autor=Autor</arg>
+<arg>editora=Editora</arg>
+<arg>volume=1</arg>
+<arg>descricao=Descricao</arg>
+<arg>categoriasIds=${lista_vazia}</arg>
+<arg>quantidade=0</arg>
+<arg>fotoCapaUrl=https://res.cloudinary.com/teste/image.webp</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.426626" elapsed="0.000000"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:43.456857" level="INFO">POST Request : url=http://localhost:8080/livros 
+ path_url=/livros 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4MywiZXhwIjoxNzgxNzM1OTgzfQ.T9sWlaf4iiQZxtBpCOLuCrVvUSa2Aq_DMNWKMKuiD2o', 'Content-Length': '221'} 
+ body=b'{"nomeObra": "Livro Sem Estoque JSKW", "autor": "Autor", "editora": "Editora", "volume": "1", "descricao": "Descricao", "categoriasIds": [], "quantidade": "0", "fotoCapaUrl": "https://res.cloudinary.com/teste/image.webp"}' 
+ </msg>
+<msg time="2026-06-16T19:39:43.456857" level="INFO">POST Response : url=http://localhost:8080/livros 
+ status=201, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '439', 'Date': 'Tue, 16 Jun 2026 22:39:43 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"id":"fac86540-3612-4961-9746-ca84e58f88d4","nomeObra":"Livro Sem Estoque JSKW","autor":"Autor","editora":"Editora","volume":"1","descricao":"Descricao","categorias":[],"quantidade":0,"quantidadeEmprestada":0,"fotoCapaUrl":"https://res.cloudinary.com/teste/image.webp","oculto":false,"motivoOcultacao":null,"criadoPorId":"2ac2779a-4838-430d-9d1d-562cd6eb9528","editadoPorId":null,"criadoEm":"2026-06-16T22:39:43.4508718","editadoEm":null} 
+ </msg>
+<msg time="2026-06-16T19:39:43.456857" level="INFO">${res_livro} = &lt;Response [201]&gt;</msg>
+<var>${res_livro}</var>
+<arg>biblioteca_api</arg>
+<arg>/livros</arg>
+<arg>json=${body_livro}</arg>
+<arg>headers=${headers_admin}</arg>
+<arg>expected_status=201</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.427615" elapsed="0.029242"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.457846" level="INFO">${livro_id_zero} = fac86540-3612-4961-9746-ca84e58f88d4</msg>
+<var>${livro_id_zero}</var>
+<arg>${res_livro.json()}[id]</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.457846" elapsed="0.000000"/>
+</kw>
+<kw name="Gerar Token Leitor" owner="keywords">
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.459852" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.458844" elapsed="0.001008"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:43.459852" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:43.459852" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:43.458844" elapsed="0.001008"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.460836" level="INFO">${body} = {'identificador': 'leitor@biblioteca.com', 'senha': 'Leitor@123'}</msg>
+<var>${body}</var>
+<arg>identificador=${LEITOR_EMAIL}</arg>
+<arg>senha=${LEITOR_PASSWORD}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.459852" elapsed="0.000984"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:43.643253" level="INFO">POST Request : url=http://localhost:8080/auth/login 
+ path_url=/auth/login 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '65'} 
+ body=b'{"identificador": "leitor@biblioteca.com", "senha": "Leitor@123"}' 
+ </msg>
+<msg time="2026-06-16T19:39:43.644364" level="INFO">POST Response : url=http://localhost:8080/auth/login 
+ status=200, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '323', 'Date': 'Tue, 16 Jun 2026 22:39:43 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"id":"7dc70605-8290-456b-8f14-acda71c73c38","nomeCompleto":"Leitor de Testes","email":"leitor@biblioteca.com","telefoneWhatsapp":"85900000000","role":"LEITOR","token":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODMsImV4cCI6MTc4MTczNTk4M30.rxk9zJrjsIZ34uHoKEihvibY5eIdsslJeUNtmh11UAE"} 
+ </msg>
+<msg time="2026-06-16T19:39:43.644364" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>biblioteca_api</arg>
+<arg>/auth/login</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.460836" elapsed="0.183528"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.646236" level="INFO">${token} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODMsImV4cCI6MTc4MTczNTk4M30.rxk9zJrjsIZ34uHoKEihvibY5eIdsslJeUNtmh11UAE</msg>
+<var>${token}</var>
+<arg>${response.json()}[token]</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.644364" elapsed="0.001872"/>
+</kw>
+<return>
+<value>${token}</value>
+<status status="PASS" start="2026-06-16T19:39:43.646236" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:43.646236" level="INFO">${token_leitor} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODMsImV4cCI6MTc4MTczNTk4M30.rxk9zJrjsIZ34uHoKEihvibY5eIdsslJeUNtmh11UAE</msg>
+<var>${token_leitor}</var>
+<doc>Faz login com a conta de leitor de testes (criada pelo DatabaseSeeder) e retorna o token JWT</doc>
+<status status="PASS" start="2026-06-16T19:39:43.458844" elapsed="0.187392"/>
+</kw>
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.647265" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.647265" elapsed="0.000000"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:43.648230" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:43.648230" level="INFO">${headers_leitor} = {'Content-Type': 'application/json'}</msg>
+<var>${headers_leitor}</var>
+<status status="PASS" start="2026-06-16T19:39:43.646236" elapsed="0.001994"/>
+</kw>
+<kw name="Set To Dictionary" owner="Collections">
+<arg>${headers_leitor}</arg>
+<arg>Authorization</arg>
+<arg>Bearer ${token_leitor}</arg>
+<doc>Adds the given ``key_value_pairs`` and/or ``items`` to the ``dictionary``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.648230" elapsed="0.000000"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.648230" level="INFO">${body_req} = {'livroId': 'fac86540-3612-4961-9746-ca84e58f88d4'}</msg>
+<var>${body_req}</var>
+<arg>livroId=${livro_id_zero}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.648230" elapsed="0.000000"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:43.682117" level="INFO">POST Request : url=http://localhost:8080/emprestimos/solicitar 
+ path_url=/emprestimos/solicitar 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODMsImV4cCI6MTc4MTczNTk4M30.rxk9zJrjsIZ34uHoKEihvibY5eIdsslJeUNtmh11UAE', 'Content-Length': '51'} 
+ body=b'{"livroId": "fac86540-3612-4961-9746-ca84e58f88d4"}' 
+ </msg>
+<msg time="2026-06-16T19:39:43.682117" level="INFO">POST Response : url=http://localhost:8080/emprestimos/solicitar 
+ status=400, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Date': 'Tue, 16 Jun 2026 22:39:43 GMT', 'Connection': 'close'} 
+ body={"timestamp":"2026-06-16T22:39:43.6791282","status":400,"erro":"Regra de negócio violada","mensagem":"Livro sem quantidade disponível.","path":"/emprestimos/solicitar","campos":[]} 
+ </msg>
+<arg>biblioteca_api</arg>
+<arg>${EMPRESTIMOS_ENDPOINT}/solicitar</arg>
+<arg>json=${body_req}</arg>
+<arg>headers=${headers_leitor}</arg>
+<arg>expected_status=400</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.649226" elapsed="0.032891"/>
+</kw>
+<doc>Testa regra de negócio: Livro sem estoque disponível</doc>
+<status status="PASS" start="2026-06-16T19:39:43.263751" elapsed="0.418366"/>
+</test>
+<doc>Suite de testes para validar o EmprestimoController</doc>
+<status status="PASS" start="2026-06-16T19:39:41.770535" elapsed="1.912587"/>
+</suite>
+<suite id="s1-s3" name="Livros Test" source="C:\Users\Almeida\Documents\biblioteca-api-main\robot_tests\tests\livros_test.robot">
+<kw name="Criar Sessao Biblioteca" owner="api_config" type="SETUP">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:43.693369" level="INFO">Creating Session using : alias=biblioteca_api, url=http://localhost:8080, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<arg>biblioteca_api</arg>
+<arg>${BASE_URL}</arg>
+<arg>verify=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-06-16T19:39:43.692867" elapsed="0.000530"/>
+</kw>
+<status status="PASS" start="2026-06-16T19:39:43.692352" elapsed="0.001045"/>
+</kw>
+<test id="s1-s3-t1" name="CT01: (ADMIN) Deve criar um livro novo retornando 201" line="13">
+<kw name="Gerar Token Admin" owner="keywords">
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.696275" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.695689" elapsed="0.001142"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:43.696853" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:43.697410" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:43.695179" elapsed="0.002231"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.698525" level="INFO">${body} = {'identificador': 'admin@biblioteca.com', 'senha': 'Admin@123p'}</msg>
+<var>${body}</var>
+<arg>identificador=${ADMIN_EMAIL}</arg>
+<arg>senha=${ADMIN_PASSWORD}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.697922" elapsed="0.000603"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:43.881986" level="INFO">POST Request : url=http://localhost:8080/auth/login 
+ path_url=/auth/login 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '64'} 
+ body=b'{"identificador": "admin@biblioteca.com", "senha": "Admin@123p"}' 
+ </msg>
+<msg time="2026-06-16T19:39:43.881986" level="INFO">POST Response : url=http://localhost:8080/auth/login 
+ status=200, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '316', 'Date': 'Tue, 16 Jun 2026 22:39:43 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"id":"2ac2779a-4838-430d-9d1d-562cd6eb9528","nomeCompleto":"Administrador Inicial","email":"admin@biblioteca.com","telefoneWhatsapp":null,"role":"ADMIN","token":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4MywiZXhwIjoxNzgxNzM1OTgzfQ.T9sWlaf4iiQZxtBpCOLuCrVvUSa2Aq_DMNWKMKuiD2o"} 
+ </msg>
+<msg time="2026-06-16T19:39:43.882982" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>biblioteca_api</arg>
+<arg>/auth/login</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.699218" elapsed="0.183764"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.883979" level="INFO">${token} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4MywiZXhwIjoxNzgxNzM1OTgzfQ.T9sWlaf4iiQZxtBpCOLuCrVvUSa2Aq_DMNWKMKuiD2o</msg>
+<var>${token}</var>
+<arg>${response.json()}[token]</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.882982" elapsed="0.000997"/>
+</kw>
+<return>
+<value>${token}</value>
+<status status="PASS" start="2026-06-16T19:39:43.883979" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:43.883979" level="INFO">${token} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4MywiZXhwIjoxNzgxNzM1OTgzfQ.T9sWlaf4iiQZxtBpCOLuCrVvUSa2Aq_DMNWKMKuiD2o</msg>
+<var>${token}</var>
+<doc>Faz login com a conta de administrador (criada pelo ambiente) e retorna o token JWT</doc>
+<status status="PASS" start="2026-06-16T19:39:43.694513" elapsed="0.189466"/>
+</kw>
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.884978" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.884978" elapsed="0.000995"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:43.885973" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:43.885973" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:43.884978" elapsed="0.000995"/>
+</kw>
+<kw name="Set To Dictionary" owner="Collections">
+<arg>${headers}</arg>
+<arg>Authorization</arg>
+<arg>Bearer ${token}</arg>
+<doc>Adds the given ``key_value_pairs`` and/or ``items`` to the ``dictionary``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.885973" elapsed="0.000000"/>
+</kw>
+<kw name="Generate Random String" owner="String">
+<msg time="2026-06-16T19:39:43.886977" level="INFO">${random_str} = UXFT</msg>
+<var>${random_str}</var>
+<arg>4</arg>
+<arg>[UPPER]</arg>
+<doc>Generates a string with a desired ``length`` from the given ``chars``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.885973" elapsed="0.001004"/>
+</kw>
+<kw name="Create List" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.886977" level="INFO">${lista_vazia} = []</msg>
+<var>${lista_vazia}</var>
+<doc>Returns a list containing given items.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.886977" elapsed="0.000000"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.887967" level="INFO">${body} = {'nomeObra': 'Livro de Testes UXFT', 'autor': 'Autor Ficticio', 'editora': 'Editora Robot', 'volume': '1', 'descricao': 'Livro para testes automatizados', 'categoriasIds': [], 'quantidade': '5', 'foto...</msg>
+<var>${body}</var>
+<arg>nomeObra=Livro de Testes ${random_str}</arg>
+<arg>autor=Autor Ficticio</arg>
+<arg>editora=Editora Robot</arg>
+<arg>volume=1</arg>
+<arg>descricao=Livro para testes automatizados</arg>
+<arg>categoriasIds=${lista_vazia}</arg>
+<arg>quantidade=5</arg>
+<arg>fotoCapaUrl=https://res.cloudinary.com/teste/image.webp</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.886977" elapsed="0.000990"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:43.914876" level="INFO">POST Request : url=http://localhost:8080/livros 
+ path_url=/livros 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4MywiZXhwIjoxNzgxNzM1OTgzfQ.T9sWlaf4iiQZxtBpCOLuCrVvUSa2Aq_DMNWKMKuiD2o', 'Content-Length': '256'} 
+ body=b'{"nomeObra": "Livro de Testes UXFT", "autor": "Autor Ficticio", "editora": "Editora Robot", "volume": "1", "descricao": "Livro para testes automatizados", "categoriasIds": [], "quantidade": "5", "fotoCapaUrl": "https://res.cloudinary.com/teste/image.webp"}' 
+ </msg>
+<msg time="2026-06-16T19:39:43.914876" level="INFO">POST Response : url=http://localhost:8080/livros 
+ status=201, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '474', 'Date': 'Tue, 16 Jun 2026 22:39:43 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"id":"da7410f8-3672-43f4-b1f0-c5a8773e1034","nomeObra":"Livro de Testes UXFT","autor":"Autor Ficticio","editora":"Editora Robot","volume":"1","descricao":"Livro para testes automatizados","categorias":[],"quantidade":5,"quantidadeEmprestada":0,"fotoCapaUrl":"https://res.cloudinary.com/teste/image.webp","oculto":false,"motivoOcultacao":null,"criadoPorId":"2ac2779a-4838-430d-9d1d-562cd6eb9528","editadoPorId":null,"criadoEm":"2026-06-16T22:39:43.9078996","editadoEm":null} 
+ </msg>
+<msg time="2026-06-16T19:39:43.914876" level="INFO">${response} = &lt;Response [201]&gt;</msg>
+<var>${response}</var>
+<arg>biblioteca_api</arg>
+<arg>${LIVROS_ENDPOINT}</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=201</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.887967" elapsed="0.026909"/>
+</kw>
+<kw name="Dictionary Should Contain Key" owner="Collections">
+<msg time="2026-06-16T19:39:43.915881" level="INFO">False</msg>
+<arg>${response.json()}</arg>
+<arg>id</arg>
+<doc>Fails if ``key`` is not found from ``dictionary``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.914876" elapsed="0.001005"/>
+</kw>
+<kw name="Set Global Variable" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.917867" level="INFO">${NOVO_LIVRO_ID} = da7410f8-3672-43f4-b1f0-c5a8773e1034</msg>
+<arg>${NOVO_LIVRO_ID}</arg>
+<arg>${response.json()}[id]</arg>
+<doc>Makes a variable available globally in all tests and suites.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.915881" elapsed="0.001986"/>
+</kw>
+<doc>Cria um livro novo passando o JWT de Admin</doc>
+<status status="PASS" start="2026-06-16T19:39:43.693397" elapsed="0.225465"/>
+</test>
+<test id="s1-s3-t2" name="CT02: (LEITOR) Deve receber Forbidden 403 ao tentar criar um livro" line="41">
+<kw name="Gerar Token Leitor" owner="keywords">
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.921396" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.920865" elapsed="0.000531"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:43.921396" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:43.921933" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:43.920300" elapsed="0.001633"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:43.922452" level="INFO">${body} = {'identificador': 'leitor@biblioteca.com', 'senha': 'Leitor@123'}</msg>
+<var>${body}</var>
+<arg>identificador=${LEITOR_EMAIL}</arg>
+<arg>senha=${LEITOR_PASSWORD}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.921933" elapsed="0.000519"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:44.080381" level="INFO">POST Request : url=http://localhost:8080/auth/login 
+ path_url=/auth/login 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '65'} 
+ body=b'{"identificador": "leitor@biblioteca.com", "senha": "Leitor@123"}' 
+ </msg>
+<msg time="2026-06-16T19:39:44.081388" level="INFO">POST Response : url=http://localhost:8080/auth/login 
+ status=200, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '323', 'Date': 'Tue, 16 Jun 2026 22:39:44 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"id":"7dc70605-8290-456b-8f14-acda71c73c38","nomeCompleto":"Leitor de Testes","email":"leitor@biblioteca.com","telefoneWhatsapp":"85900000000","role":"LEITOR","token":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODQsImV4cCI6MTc4MTczNTk4NH0.lAL8ZHjt0MDQ-m0qt33h1YL8RAySPLxeCLJ2IbWnkM4"} 
+ </msg>
+<msg time="2026-06-16T19:39:44.081388" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>biblioteca_api</arg>
+<arg>/auth/login</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:43.922452" elapsed="0.158936"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-06-16T19:39:44.082385" level="INFO">${token} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODQsImV4cCI6MTc4MTczNTk4NH0.lAL8ZHjt0MDQ-m0qt33h1YL8RAySPLxeCLJ2IbWnkM4</msg>
+<var>${token}</var>
+<arg>${response.json()}[token]</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.081388" elapsed="0.000997"/>
+</kw>
+<return>
+<value>${token}</value>
+<status status="PASS" start="2026-06-16T19:39:44.082385" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:44.082385" level="INFO">${token} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODQsImV4cCI6MTc4MTczNTk4NH0.lAL8ZHjt0MDQ-m0qt33h1YL8RAySPLxeCLJ2IbWnkM4</msg>
+<var>${token}</var>
+<doc>Faz login com a conta de leitor de testes (criada pelo DatabaseSeeder) e retorna o token JWT</doc>
+<status status="PASS" start="2026-06-16T19:39:43.919611" elapsed="0.162774"/>
+</kw>
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:44.083383" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.083383" elapsed="0.000000"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:44.083383" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:44.083383" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:44.082385" elapsed="0.000998"/>
+</kw>
+<kw name="Set To Dictionary" owner="Collections">
+<arg>${headers}</arg>
+<arg>Authorization</arg>
+<arg>Bearer ${token}</arg>
+<doc>Adds the given ``key_value_pairs`` and/or ``items`` to the ``dictionary``.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.083383" elapsed="0.000000"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:44.084505" level="INFO">${body} = {'nomeObra': 'Hacker Book', 'autor': 'Anon', 'editora': 'Null', 'volume': '1', 'quantidade': '1', 'fotoCapaUrl': 'https://res.cloudinary.com/img.webp'}</msg>
+<var>${body}</var>
+<arg>nomeObra=Hacker Book</arg>
+<arg>autor=Anon</arg>
+<arg>editora=Null</arg>
+<arg>volume=1</arg>
+<arg>quantidade=1</arg>
+<arg>fotoCapaUrl=https://res.cloudinary.com/img.webp</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.083383" elapsed="0.001122"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:44.095987" level="INFO">POST Request : url=http://localhost:8080/livros 
+ path_url=/livros 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODQsImV4cCI6MTc4MTczNTk4NH0.lAL8ZHjt0MDQ-m0qt33h1YL8RAySPLxeCLJ2IbWnkM4', 'Content-Length': '151'} 
+ body=b'{"nomeObra": "Hacker Book", "autor": "Anon", "editora": "Null", "volume": "1", "quantidade": "1", "fotoCapaUrl": "https://res.cloudinary.com/img.webp"}' 
+ </msg>
+<msg time="2026-06-16T19:39:44.095987" level="INFO">POST Response : url=http://localhost:8080/livros 
+ status=403, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json;charset=UTF-8', 'Content-Length': '177', 'Date': 'Tue, 16 Jun 2026 22:39:44 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"timestamp":"2026-06-16T22:39:44.0939851","status":403,"erro":"Acesso negado","mensagem":"Você não possui permissão para acessar este recurso.","path":"/livros","campos":[]} 
+ </msg>
+<arg>biblioteca_api</arg>
+<arg>${LIVROS_ENDPOINT}</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=403</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.085020" elapsed="0.010967"/>
+</kw>
+<doc>Tenta criar um livro com Token de Leitor</doc>
+<status status="PASS" start="2026-06-16T19:39:43.919092" elapsed="0.176895"/>
+</test>
+<test id="s1-s3-t3" name="CT03: Validacao DTO deve falhar com 400 se faltar nomeObra" line="56">
+<kw name="Gerar Token Admin" owner="keywords">
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:44.098110" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.097592" elapsed="0.000518"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:44.098110" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:44.098110" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:44.097592" elapsed="0.000518"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:44.098636" level="INFO">${body} = {'identificador': 'admin@biblioteca.com', 'senha': 'Admin@123p'}</msg>
+<var>${body}</var>
+<arg>identificador=${ADMIN_EMAIL}</arg>
+<arg>senha=${ADMIN_PASSWORD}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.098636" elapsed="0.000000"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:44.257803" level="INFO">POST Request : url=http://localhost:8080/auth/login 
+ path_url=/auth/login 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '64'} 
+ body=b'{"identificador": "admin@biblioteca.com", "senha": "Admin@123p"}' 
+ </msg>
+<msg time="2026-06-16T19:39:44.257803" level="INFO">POST Response : url=http://localhost:8080/auth/login 
+ status=200, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '316', 'Date': 'Tue, 16 Jun 2026 22:39:44 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"id":"2ac2779a-4838-430d-9d1d-562cd6eb9528","nomeCompleto":"Administrador Inicial","email":"admin@biblioteca.com","telefoneWhatsapp":null,"role":"ADMIN","token":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4NCwiZXhwIjoxNzgxNzM1OTg0fQ.TGYH6F2sNnOddTZITTR6XEmfKRXJ3-oIZTpFHq9lpFQ"} 
+ </msg>
+<msg time="2026-06-16T19:39:44.258801" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>biblioteca_api</arg>
+<arg>/auth/login</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.098636" elapsed="0.160165"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-06-16T19:39:44.259796" level="INFO">${token} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4NCwiZXhwIjoxNzgxNzM1OTg0fQ.TGYH6F2sNnOddTZITTR6XEmfKRXJ3-oIZTpFHq9lpFQ</msg>
+<var>${token}</var>
+<arg>${response.json()}[token]</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.258801" elapsed="0.000995"/>
+</kw>
+<return>
+<value>${token}</value>
+<status status="PASS" start="2026-06-16T19:39:44.259796" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:44.259796" level="INFO">${token} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4NCwiZXhwIjoxNzgxNzM1OTg0fQ.TGYH6F2sNnOddTZITTR6XEmfKRXJ3-oIZTpFHq9lpFQ</msg>
+<var>${token}</var>
+<doc>Faz login com a conta de administrador (criada pelo ambiente) e retorna o token JWT</doc>
+<status status="PASS" start="2026-06-16T19:39:44.096975" elapsed="0.163817"/>
+</kw>
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:44.260792" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.260792" elapsed="0.000000"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:44.261789" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:44.261789" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:44.260792" elapsed="0.000997"/>
+</kw>
+<kw name="Set To Dictionary" owner="Collections">
+<arg>${headers}</arg>
+<arg>Authorization</arg>
+<arg>Bearer ${token}</arg>
+<doc>Adds the given ``key_value_pairs`` and/or ``items`` to the ``dictionary``.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.261789" elapsed="0.000000"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:44.262787" level="INFO">${body} = {'nomeObra': '', 'autor': 'Anon', 'editora': 'Null', 'volume': '1', 'quantidade': '1', 'fotoCapaUrl': 'https://res.cloudinary.com/img.webp'}</msg>
+<var>${body}</var>
+<arg>nomeObra=${EMPTY}</arg>
+<arg>autor=Anon</arg>
+<arg>editora=Null</arg>
+<arg>volume=1</arg>
+<arg>quantidade=1</arg>
+<arg>fotoCapaUrl=https://res.cloudinary.com/img.webp</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.261789" elapsed="0.000998"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:44.295686" level="INFO">POST Request : url=http://localhost:8080/livros 
+ path_url=/livros 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4NCwiZXhwIjoxNzgxNzM1OTg0fQ.TGYH6F2sNnOddTZITTR6XEmfKRXJ3-oIZTpFHq9lpFQ', 'Content-Length': '140'} 
+ body=b'{"nomeObra": "", "autor": "Anon", "editora": "Null", "volume": "1", "quantidade": "1", "fotoCapaUrl": "https://res.cloudinary.com/img.webp"}' 
+ </msg>
+<msg time="2026-06-16T19:39:44.295686" level="INFO">POST Response : url=http://localhost:8080/livros 
+ status=400, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Date': 'Tue, 16 Jun 2026 22:39:44 GMT', 'Connection': 'close'} 
+ body={"timestamp":"2026-06-16T22:39:44.2936926","status":400,"erro":"Dados inválidos","mensagem":"Um ou mais campos estão inválidos.","path":"/livros","campos":[{"campo":"nomeObra","mensagem":"não deve estar em branco"}]} 
+ </msg>
+<arg>biblioteca_api</arg>
+<arg>${LIVROS_ENDPOINT}</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=400</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.262787" elapsed="0.032899"/>
+</kw>
+<doc>Testa a validação de campos vazios (Status 400 Bad Request)</doc>
+<status status="PASS" start="2026-06-16T19:39:44.095987" elapsed="0.200707"/>
+</test>
+<test id="s1-s3-t4" name="CT04: GET /livros deve listar livros paginados com 200 OK" line="71">
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:44.299258" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.298715" elapsed="0.000543"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:44.299258" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:44.299794" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:44.297994" elapsed="0.001800"/>
+</kw>
+<kw name="GET On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:44.399602" level="INFO">GET Request : url=http://localhost:8080/livros 
+ path_url=/livros 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json'} 
+ body=None 
+ </msg>
+<msg time="2026-06-16T19:39:44.400610" level="INFO">GET Response : url=http://localhost:8080/livros 
+ status=200, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '1184', 'Date': 'Tue, 16 Jun 2026 22:39:44 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"content":[{"id":"da7410f8-3672-43f4-b1f0-c5a8773e1034","nomeObra":"Livro de Testes UXFT","autor":"Autor Ficticio","editora":"Editora Robot","volume":"1","descricao":"Livro para testes automatizados","categorias":[],"quantidade":5,"quantidadeEmprestada":0,"fotoCapaUrl":"https://res.cloudinary.com/teste/image.webp"},{"id":"fac86540-3612-4961-9746-ca84e58f88d4","nomeObra":"Livro Sem Estoque JSKW","autor":"Autor","editora":"Editora","volume":"1","descricao":"Descricao","categorias":[],"quantidade":0,"quantidadeEmprestada":0,"fotoCapaUrl":"https://res.cloudinary.com/teste/image.webp"},{"id":"56ecaa46-8065-4ef8-bcef-c3ae39ec1526","nomeObra":"Livro Emprestimo FUNX","autor":"Autor Ficticio","editora":"Editora Robot","volume":"1","descricao":"Livro de Teste","categorias":[],"quantidade":1,"quantidadeEmprestada":0,"fotoCapaUrl":"https://res.cloudinary.com/teste/image.webp"}],"empty":false,"first":true,"last":true,"number":0,"numberOfElements":3,"pageable":{"offset":0,"pageNumber":0,"pageSize":10,"paged":true,"sort":{"empty":false,"sorted":true,"unsorted":false},"unpaged":false},"size":10,"sort":{"empty":false,"sorted":true,"unsorted":false},"totalElements":3,"totalPages":1} 
+ </msg>
+<msg time="2026-06-16T19:39:44.400610" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>biblioteca_api</arg>
+<arg>${LIVROS_ENDPOINT}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a GET request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.299794" elapsed="0.100816"/>
+</kw>
+<kw name="Dictionary Should Contain Key" owner="Collections">
+<msg time="2026-06-16T19:39:44.401598" level="INFO">False</msg>
+<arg>${response.json()}</arg>
+<arg>content</arg>
+<doc>Fails if ``key`` is not found from ``dictionary``.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.400610" elapsed="0.000988"/>
+</kw>
+<kw name="Dictionary Should Contain Key" owner="Collections">
+<msg time="2026-06-16T19:39:44.403589" level="INFO">False</msg>
+<arg>${response.json()}</arg>
+<arg>totalElements</arg>
+<doc>Fails if ``key`` is not found from ``dictionary``.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.402592" elapsed="0.000997"/>
+</kw>
+<doc>Lista os livros e verifica a estrutura da paginação</doc>
+<status status="PASS" start="2026-06-16T19:39:44.296955" elapsed="0.106634"/>
+</test>
+<test id="s1-s3-t5" name="CT05: GET /livros/{id} deve retornar 404 para ID inexistente" line="84">
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:44.406360" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.406360" elapsed="0.000000"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:44.406799" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:44.406799" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:44.405841" elapsed="0.000958"/>
+</kw>
+<kw name="GET On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:44.421135" level="INFO">GET Request : url=http://localhost:8080/livros/00000000-0000-0000-0000-000000000000 
+ path_url=/livros/00000000-0000-0000-0000-000000000000 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json'} 
+ body=None 
+ </msg>
+<msg time="2026-06-16T19:39:44.422130" level="INFO">GET Response : url=http://localhost:8080/livros/00000000-0000-0000-0000-000000000000 
+ status=404, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Date': 'Tue, 16 Jun 2026 22:39:44 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"timestamp":"2026-06-16T22:39:44.4169931","status":404,"erro":"Recurso não encontrado","mensagem":"Livro não encontrado.","path":"/livros/00000000-0000-0000-0000-000000000000","campos":[]} 
+ </msg>
+<arg>biblioteca_api</arg>
+<arg>${LIVROS_ENDPOINT}/00000000-0000-0000-0000-000000000000</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=404</arg>
+<doc>Sends a GET request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.406799" elapsed="0.015331"/>
+</kw>
+<doc>Busca um UUID que não existe</doc>
+<status status="PASS" start="2026-06-16T19:39:44.404227" elapsed="0.017903"/>
+</test>
+<doc>Suite de testes para validar o LivroController</doc>
+<status status="PASS" start="2026-06-16T19:39:43.683639" elapsed="0.739918"/>
+</suite>
+<suite id="s1-s4" name="Usuarios Test" source="C:\Users\Almeida\Documents\biblioteca-api-main\robot_tests\tests\usuarios_test.robot">
+<kw name="Criar Sessao Biblioteca" owner="api_config" type="SETUP">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:44.438633" level="INFO">Creating Session using : alias=biblioteca_api, url=http://localhost:8080, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<arg>biblioteca_api</arg>
+<arg>${BASE_URL}</arg>
+<arg>verify=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-06-16T19:39:44.438070" elapsed="0.001095"/>
+</kw>
+<status status="PASS" start="2026-06-16T19:39:44.436988" elapsed="0.002177"/>
+</kw>
+<test id="s1-s4-t1" name="CT01: (ADMIN) Deve listar usuarios com paginacao e status 200" line="13">
+<kw name="Gerar Token Admin" owner="keywords">
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:44.444167" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.443124" elapsed="0.001043"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:44.444679" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:44.445669" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:44.442456" elapsed="0.003213"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:44.447973" level="INFO">${body} = {'identificador': 'admin@biblioteca.com', 'senha': 'Admin@123p'}</msg>
+<var>${body}</var>
+<arg>identificador=${ADMIN_EMAIL}</arg>
+<arg>senha=${ADMIN_PASSWORD}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.445669" elapsed="0.002816"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:44.642944" level="INFO">POST Request : url=http://localhost:8080/auth/login 
+ path_url=/auth/login 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '64'} 
+ body=b'{"identificador": "admin@biblioteca.com", "senha": "Admin@123p"}' 
+ </msg>
+<msg time="2026-06-16T19:39:44.642944" level="INFO">POST Response : url=http://localhost:8080/auth/login 
+ status=200, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '316', 'Date': 'Tue, 16 Jun 2026 22:39:44 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"id":"2ac2779a-4838-430d-9d1d-562cd6eb9528","nomeCompleto":"Administrador Inicial","email":"admin@biblioteca.com","telefoneWhatsapp":null,"role":"ADMIN","token":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4NCwiZXhwIjoxNzgxNzM1OTg0fQ.TGYH6F2sNnOddTZITTR6XEmfKRXJ3-oIZTpFHq9lpFQ"} 
+ </msg>
+<msg time="2026-06-16T19:39:44.643940" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>biblioteca_api</arg>
+<arg>/auth/login</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.448624" elapsed="0.195316"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-06-16T19:39:44.644937" level="INFO">${token} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4NCwiZXhwIjoxNzgxNzM1OTg0fQ.TGYH6F2sNnOddTZITTR6XEmfKRXJ3-oIZTpFHq9lpFQ</msg>
+<var>${token}</var>
+<arg>${response.json()}[token]</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.643940" elapsed="0.000997"/>
+</kw>
+<return>
+<value>${token}</value>
+<status status="PASS" start="2026-06-16T19:39:44.644937" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:44.644937" level="INFO">${token} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4NCwiZXhwIjoxNzgxNzM1OTg0fQ.TGYH6F2sNnOddTZITTR6XEmfKRXJ3-oIZTpFHq9lpFQ</msg>
+<var>${token}</var>
+<doc>Faz login com a conta de administrador (criada pelo ambiente) e retorna o token JWT</doc>
+<status status="PASS" start="2026-06-16T19:39:44.441409" elapsed="0.204538"/>
+</kw>
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:44.646930" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.645947" elapsed="0.000983"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:44.646930" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:44.646930" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:44.645947" elapsed="0.000983"/>
+</kw>
+<kw name="Set To Dictionary" owner="Collections">
+<arg>${headers}</arg>
+<arg>Authorization</arg>
+<arg>Bearer ${token}</arg>
+<doc>Adds the given ``key_value_pairs`` and/or ``items`` to the ``dictionary``.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.646930" elapsed="0.000997"/>
+</kw>
+<kw name="GET On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:44.697430" level="INFO">GET Request : url=http://localhost:8080/usuarios 
+ path_url=/usuarios 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlhdCI6MTc4MTY0OTU4NCwiZXhwIjoxNzgxNzM1OTg0fQ.TGYH6F2sNnOddTZITTR6XEmfKRXJ3-oIZTpFHq9lpFQ'} 
+ body=None 
+ </msg>
+<msg time="2026-06-16T19:39:44.697430" level="INFO">GET Response : url=http://localhost:8080/usuarios 
+ status=200, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '1068', 'Date': 'Tue, 16 Jun 2026 22:39:44 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"content":[{"id":"d701ebad-245e-46a1-9183-d29634aaef41","nomeCompleto":"Joao Teste da Silva","email":"joao_xrlfzp@gmail.com","telefoneWhatsapp":"85991988021","role":"LEITOR","ativo":false,"loginBloqueado":true,"emailValidado":false,"criadoEm":"2026-06-16T22:39:41"},{"id":"2ac2779a-4838-430d-9d1d-562cd6eb9528","nomeCompleto":"Administrador Inicial","email":"admin@biblioteca.com","telefoneWhatsapp":null,"role":"ADMIN","ativo":true,"loginBloqueado":false,"emailValidado":true,"criadoEm":"2026-06-16T22:39:40"},{"id":"7dc70605-8290-456b-8f14-acda71c73c38","nomeCompleto":"Leitor de Testes","email":"leitor@biblioteca.com","telefoneWhatsapp":"85900000000","role":"LEITOR","ativo":true,"loginBloqueado":false,"emailValidado":true,"criadoEm":"2026-06-16T22:39:40"}],"empty":false,"first":true,"last":true,"number":0,"numberOfElements":3,"pageable":{"offset":0,"pageNumber":0,"pageSize":10,"paged":true,"sort":{"empty":false,"sorted":true,"unsorted":false},"unpaged":false},"size":10,"sort":{"empty":false,"sorted":true,"unsorted":false},"totalElements":3,"totalPages":1} 
+ </msg>
+<msg time="2026-06-16T19:39:44.698426" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>biblioteca_api</arg>
+<arg>${USUARIOS_ENDPOINT}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a GET request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.647927" elapsed="0.050499"/>
+</kw>
+<kw name="Dictionary Should Contain Key" owner="Collections">
+<msg time="2026-06-16T19:39:44.699431" level="INFO">False</msg>
+<arg>${response.json()}</arg>
+<arg>content</arg>
+<doc>Fails if ``key`` is not found from ``dictionary``.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.698426" elapsed="0.001005"/>
+</kw>
+<doc>Testa a listagem de usuários apenas para admins</doc>
+<status status="PASS" start="2026-06-16T19:39:44.439689" elapsed="0.259742"/>
+</test>
+<test id="s1-s4-t2" name="CT02: (LEITOR) Deve receber 403 ao tentar listar todos os usuarios" line="27">
+<kw name="Gerar Token Leitor" owner="keywords">
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:44.701667" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.701149" elapsed="0.000518"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:44.701667" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:44.701667" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:44.700625" elapsed="0.001042"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:44.702184" level="INFO">${body} = {'identificador': 'leitor@biblioteca.com', 'senha': 'Leitor@123'}</msg>
+<var>${body}</var>
+<arg>identificador=${LEITOR_EMAIL}</arg>
+<arg>senha=${LEITOR_PASSWORD}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.702184" elapsed="0.000000"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:44.914543" level="INFO">POST Request : url=http://localhost:8080/auth/login 
+ path_url=/auth/login 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '65'} 
+ body=b'{"identificador": "leitor@biblioteca.com", "senha": "Leitor@123"}' 
+ </msg>
+<msg time="2026-06-16T19:39:44.914543" level="INFO">POST Response : url=http://localhost:8080/auth/login 
+ status=200, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '323', 'Date': 'Tue, 16 Jun 2026 22:39:44 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"id":"7dc70605-8290-456b-8f14-acda71c73c38","nomeCompleto":"Leitor de Testes","email":"leitor@biblioteca.com","telefoneWhatsapp":"85900000000","role":"LEITOR","token":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODQsImV4cCI6MTc4MTczNTk4NH0.lAL8ZHjt0MDQ-m0qt33h1YL8RAySPLxeCLJ2IbWnkM4"} 
+ </msg>
+<msg time="2026-06-16T19:39:44.914543" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>biblioteca_api</arg>
+<arg>/auth/login</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.702710" elapsed="0.211833"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-06-16T19:39:44.915538" level="INFO">${token} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODQsImV4cCI6MTc4MTczNTk4NH0.lAL8ZHjt0MDQ-m0qt33h1YL8RAySPLxeCLJ2IbWnkM4</msg>
+<var>${token}</var>
+<arg>${response.json()}[token]</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.914543" elapsed="0.000995"/>
+</kw>
+<return>
+<value>${token}</value>
+<status status="PASS" start="2026-06-16T19:39:44.915538" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:44.915538" level="INFO">${token} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODQsImV4cCI6MTc4MTczNTk4NH0.lAL8ZHjt0MDQ-m0qt33h1YL8RAySPLxeCLJ2IbWnkM4</msg>
+<var>${token}</var>
+<doc>Faz login com a conta de leitor de testes (criada pelo DatabaseSeeder) e retorna o token JWT</doc>
+<status status="PASS" start="2026-06-16T19:39:44.700625" elapsed="0.214913"/>
+</kw>
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:44.915538" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.915538" elapsed="0.000000"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:44.916535" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:44.916535" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:44.915538" elapsed="0.000997"/>
+</kw>
+<kw name="Set To Dictionary" owner="Collections">
+<arg>${headers}</arg>
+<arg>Authorization</arg>
+<arg>Bearer ${token}</arg>
+<doc>Adds the given ``key_value_pairs`` and/or ``items`` to the ``dictionary``.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.916535" elapsed="0.000000"/>
+</kw>
+<kw name="GET On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:44.929493" level="INFO">GET Request : url=http://localhost:8080/usuarios 
+ path_url=/usuarios 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODQsImV4cCI6MTc4MTczNTk4NH0.lAL8ZHjt0MDQ-m0qt33h1YL8RAySPLxeCLJ2IbWnkM4'} 
+ body=None 
+ </msg>
+<msg time="2026-06-16T19:39:44.929493" level="INFO">GET Response : url=http://localhost:8080/usuarios 
+ status=403, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json;charset=UTF-8', 'Content-Length': '179', 'Date': 'Tue, 16 Jun 2026 22:39:44 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"timestamp":"2026-06-16T22:39:44.9274987","status":403,"erro":"Acesso negado","mensagem":"Você não possui permissão para acessar este recurso.","path":"/usuarios","campos":[]} 
+ </msg>
+<arg>biblioteca_api</arg>
+<arg>${USUARIOS_ENDPOINT}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=403</arg>
+<doc>Sends a GET request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.916535" elapsed="0.012958"/>
+</kw>
+<doc>Testa a segurança da rota de listagem contra acessos de leitores</doc>
+<status status="PASS" start="2026-06-16T19:39:44.700110" elapsed="0.230378"/>
+</test>
+<test id="s1-s4-t3" name="CT03: (LEITOR/ADMIN) Deve conseguir acessar o proprio perfil em /me" line="39">
+<kw name="Gerar Token Leitor" owner="keywords">
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:44.933627" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.933113" elapsed="0.000514"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:44.934142" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:44.934142" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:44.932295" elapsed="0.001847"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:44.935253" level="INFO">${body} = {'identificador': 'leitor@biblioteca.com', 'senha': 'Leitor@123'}</msg>
+<var>${body}</var>
+<arg>identificador=${LEITOR_EMAIL}</arg>
+<arg>senha=${LEITOR_PASSWORD}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.934658" elapsed="0.000595"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:45.111861" level="INFO">POST Request : url=http://localhost:8080/auth/login 
+ path_url=/auth/login 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '65'} 
+ body=b'{"identificador": "leitor@biblioteca.com", "senha": "Leitor@123"}' 
+ </msg>
+<msg time="2026-06-16T19:39:45.111861" level="INFO">POST Response : url=http://localhost:8080/auth/login 
+ status=200, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '323', 'Date': 'Tue, 16 Jun 2026 22:39:45 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"id":"7dc70605-8290-456b-8f14-acda71c73c38","nomeCompleto":"Leitor de Testes","email":"leitor@biblioteca.com","telefoneWhatsapp":"85900000000","role":"LEITOR","token":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODUsImV4cCI6MTc4MTczNTk4NX0.BLivEuANwh9MYVsyAERGWDSnPs_qFNfGKkezTVBV25Y"} 
+ </msg>
+<msg time="2026-06-16T19:39:45.111861" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>biblioteca_api</arg>
+<arg>/auth/login</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:44.935253" elapsed="0.176608"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-06-16T19:39:45.112858" level="INFO">${token} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODUsImV4cCI6MTc4MTczNTk4NX0.BLivEuANwh9MYVsyAERGWDSnPs_qFNfGKkezTVBV25Y</msg>
+<var>${token}</var>
+<arg>${response.json()}[token]</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-06-16T19:39:45.111861" elapsed="0.000997"/>
+</kw>
+<return>
+<value>${token}</value>
+<status status="PASS" start="2026-06-16T19:39:45.112858" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:45.112858" level="INFO">${token} = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODUsImV4cCI6MTc4MTczNTk4NX0.BLivEuANwh9MYVsyAERGWDSnPs_qFNfGKkezTVBV25Y</msg>
+<var>${token}</var>
+<doc>Faz login com a conta de leitor de testes (criada pelo DatabaseSeeder) e retorna o token JWT</doc>
+<status status="PASS" start="2026-06-16T19:39:44.931209" elapsed="0.181649"/>
+</kw>
+<kw name="Obter Headers Padrao" owner="api_config">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-06-16T19:39:45.113862" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=${CONTENT_TYPE}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-06-16T19:39:45.113862" elapsed="0.000000"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-06-16T19:39:45.113862" elapsed="0.000000"/>
+</return>
+<msg time="2026-06-16T19:39:45.113862" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<status status="PASS" start="2026-06-16T19:39:45.113862" elapsed="0.000000"/>
+</kw>
+<kw name="Set To Dictionary" owner="Collections">
+<arg>${headers}</arg>
+<arg>Authorization</arg>
+<arg>Bearer ${token}</arg>
+<doc>Adds the given ``key_value_pairs`` and/or ``items`` to the ``dictionary``.</doc>
+<status status="PASS" start="2026-06-16T19:39:45.114858" elapsed="0.000000"/>
+</kw>
+<kw name="GET On Session" owner="RequestsLibrary">
+<msg time="2026-06-16T19:39:45.133788" level="INFO">GET Request : url=http://localhost:8080/usuarios/me 
+ path_url=/usuarios/me 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWl0b3JAYmlibGlvdGVjYS5jb20iLCJpYXQiOjE3ODE2NDk1ODUsImV4cCI6MTc4MTczNTk4NX0.BLivEuANwh9MYVsyAERGWDSnPs_qFNfGKkezTVBV25Y'} 
+ body=None 
+ </msg>
+<msg time="2026-06-16T19:39:45.133788" level="INFO">GET Response : url=http://localhost:8080/usuarios/me 
+ status=200, reason= 
+ headers={'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json', 'Content-Length': '250', 'Date': 'Tue, 16 Jun 2026 22:39:45 GMT', 'Keep-Alive': 'timeout=60', 'Connection': 'keep-alive'} 
+ body={"id":"7dc70605-8290-456b-8f14-acda71c73c38","nomeCompleto":"Leitor de Testes","email":"leitor@biblioteca.com","telefoneWhatsapp":"85900000000","role":"LEITOR","ativo":true,"loginBloqueado":false,"emailValidado":true,"criadoEm":"2026-06-16T22:39:40"} 
+ </msg>
+<msg time="2026-06-16T19:39:45.133788" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>biblioteca_api</arg>
+<arg>${USUARIOS_ENDPOINT}/me</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a GET request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-06-16T19:39:45.114858" elapsed="0.018930"/>
+</kw>
+<kw name="Should Be Equal As Strings" owner="BuiltIn">
+<arg>${response.json()}[email]</arg>
+<arg>${LEITOR_EMAIL}</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" start="2026-06-16T19:39:45.133788" elapsed="0.000996"/>
+</kw>
+<doc>Testa o endpoint de visualização do próprio perfil</doc>
+<status status="PASS" start="2026-06-16T19:39:44.930672" elapsed="0.204112"/>
+</test>
+<doc>Suite de testes para validar o UsuarioController</doc>
+<status status="PASS" start="2026-06-16T19:39:44.425850" elapsed="0.709235"/>
+</suite>
+<status status="PASS" start="2026-06-16T19:39:39.778664" elapsed="5.357461"/>
+</suite>
+<statistics>
+<total>
+<stat pass="16" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="16" fail="0" skip="0" id="s1" name="Tests">Tests</stat>
+<stat pass="3" fail="0" skip="0" id="s1-s1" name="Auth Test">Tests.Auth Test</stat>
+<stat pass="5" fail="0" skip="0" id="s1-s2" name="Emprestimos Test">Tests.Emprestimos Test</stat>
+<stat pass="5" fail="0" skip="0" id="s1-s3" name="Livros Test">Tests.Livros Test</stat>
+<stat pass="3" fail="0" skip="0" id="s1-s4" name="Usuarios Test">Tests.Usuarios Test</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

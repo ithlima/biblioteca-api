@@ -1,6 +1,7 @@
 package com.mej.biblioteca.service;
 
 import com.mej.biblioteca.dto.usuario.UsuarioResponse;
+import com.mej.biblioteca.dto.usuario.UsuarioBloquearRequest;
 import com.mej.biblioteca.exception.domain.AlteracaoRoleNaoPermitidaException;
 import com.mej.biblioteca.exception.domain.RoleInvalidaException;
 import com.mej.biblioteca.exception.domain.UltimoAdministradorException;
@@ -36,8 +37,8 @@ public class UsuarioService {
     }
 
     @Transactional(readOnly = true)
-    public Page<UsuarioResponse> listar(Pageable pageable) {
-        return usuarioRepository.findAll(pageable)
+    public Page<UsuarioResponse> listar(Role role, Boolean ativo, Boolean loginBloqueado, Pageable pageable) {
+        return usuarioRepository.findComFiltros(role, ativo, loginBloqueado, pageable)
                 .map(UsuarioResponse::from);
     }
 
@@ -75,13 +76,16 @@ public class UsuarioService {
     }
 
     @Transactional
-    public UsuarioResponse bloquear(UUID id) {
+    public UsuarioResponse bloquear(UUID id, UsuarioBloquearRequest request) {
         List<Usuario> administradoresAtivos = usuarioRepository.findAllAtivosByRoleForUpdate(Role.ADMIN);
         Usuario usuario = buscarPorId(id);
         if (administradorAtivo(usuario) && administradoresAtivos.size() <= 1) {
             throw new UltimoAdministradorException();
         }
         usuario.setLoginBloqueado(true);
+        if (request != null && request.motivoBloqueio() != null) {
+            usuario.setMotivoBloqueio(request.motivoBloqueio());
+        }
         return UsuarioResponse.from(usuario);
     }
 
@@ -100,6 +104,7 @@ public class UsuarioService {
     public UsuarioResponse desbloquear(UUID id) {
         Usuario usuario = buscarPorId(id);
         usuario.setLoginBloqueado(false);
+        usuario.setMotivoBloqueio(null);
         return UsuarioResponse.from(usuario);
     }
 

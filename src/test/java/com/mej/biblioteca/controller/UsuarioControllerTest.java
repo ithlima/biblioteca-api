@@ -59,9 +59,9 @@ class UsuarioControllerTest {
     void testListar() {
         org.springframework.data.domain.Pageable pageable = mock(org.springframework.data.domain.Pageable.class);
         org.springframework.data.domain.Page<UsuarioResponse> mockPage = mock(org.springframework.data.domain.Page.class);
-        when(usuarioService.listar(pageable)).thenReturn(mockPage);
+        when(usuarioService.listar(null, null, null, pageable)).thenReturn(mockPage);
 
-        var result = usuarioController.listar(pageable);
+        var result = usuarioController.listar(null, null, null, pageable);
         assertEquals(mockPage, result);
     }
 
@@ -99,10 +99,11 @@ class UsuarioControllerTest {
     @Test
     void testBloquear() {
         UUID id = UUID.randomUUID();
+        com.mej.biblioteca.dto.usuario.UsuarioBloquearRequest req = new com.mej.biblioteca.dto.usuario.UsuarioBloquearRequest("Motivo");
         UsuarioResponse mockResponse = mock(UsuarioResponse.class);
-        when(usuarioService.bloquear(id)).thenReturn(mockResponse);
+        when(usuarioService.bloquear(id, req)).thenReturn(mockResponse);
 
-        var result = usuarioController.bloquear(id);
+        var result = usuarioController.bloquear(id, req);
         assertEquals(mockResponse, result);
     }
 

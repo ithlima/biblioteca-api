@@ -47,6 +47,20 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
     @EntityGraph(attributePaths = {"categorias"})
     Page<Livro> findByOcultoFalseAndQuantidadeLessThanEqualAndCategoriasId(Integer quantidade, UUID categoriaId, Pageable pageable);
 
+    @EntityGraph(attributePaths = {"categorias"})
+    @Query("""
+            select distinct l from Livro l left join l.categorias c
+            where (:categoriaId is null or c.id = :categoriaId)
+              and (:oculto is null or l.oculto = :oculto)
+              and (:disponivel is null or (:disponivel = true and l.quantidade > 0) or (:disponivel = false and l.quantidade <= 0))
+            """)
+    Page<Livro> findComFiltros(
+            @Param("categoriaId") UUID categoriaId,
+            @Param("disponivel") Boolean disponivel,
+            @Param("oculto") Boolean oculto,
+            Pageable pageable
+    );
+
 
     @Query("""
             select count(l) > 0

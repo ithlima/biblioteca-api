@@ -37,9 +37,10 @@ public class LivroController {
     public Page<Object> listar(
             @RequestParam(required = false) UUID categoriaId,
             @RequestParam(required = false) Boolean disponivel,
+            @RequestParam(required = false) Boolean oculto,
             @ParameterObject @PageableDefault(size = 10, sort = "criadoEm", direction = Sort.Direction.DESC) Pageable pageable, 
             Authentication authentication) {
-        return livroService.listar(categoriaId, disponivel, pageable, authentication);
+        return livroService.listar(categoriaId, disponivel, oculto, pageable, authentication);
     }
 
     @GetMapping("/{id}")

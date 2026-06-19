@@ -1,7 +1,9 @@
 package com.mej.biblioteca.controller;
 
 import com.mej.biblioteca.dto.usuario.AlterarRoleRequest;
+import com.mej.biblioteca.dto.usuario.UsuarioBloquearRequest;
 import com.mej.biblioteca.dto.usuario.UsuarioResponse;
+import com.mej.biblioteca.model.enums.Role;
 import com.mej.biblioteca.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -29,8 +32,12 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
 
     @GetMapping
-    public Page<UsuarioResponse> listar(@ParameterObject @PageableDefault(size = 10, sort = "criadoEm", direction = Sort.Direction.DESC) Pageable pageable) {
-        return usuarioService.listar(pageable);
+    public Page<UsuarioResponse> listar(
+            @RequestParam(required = false) Role role,
+            @RequestParam(required = false) Boolean ativo,
+            @RequestParam(required = false) Boolean loginBloqueado,
+            @ParameterObject @PageableDefault(size = 10, sort = "criadoEm", direction = Sort.Direction.DESC) Pageable pageable) {
+        return usuarioService.listar(role, ativo, loginBloqueado, pageable);
     }
 
     @GetMapping("/me")
@@ -62,8 +69,8 @@ public class UsuarioController {
     }
 
     @PatchMapping("/{id}/bloquear")
-    public UsuarioResponse bloquear(@PathVariable UUID id) {
-        return usuarioService.bloquear(id);
+    public UsuarioResponse bloquear(@PathVariable UUID id, @RequestBody @Valid UsuarioBloquearRequest request) {
+        return usuarioService.bloquear(id, request);
     }
 
     @PatchMapping("/{id}/desbloquear")

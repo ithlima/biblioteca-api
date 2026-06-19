@@ -46,7 +46,7 @@ class UsuarioServiceTest {
         when(usuarioRepository.findById(id)).thenReturn(Optional.of(admin));
 
         UltimoAdministradorException exception =
-                assertThrows(UltimoAdministradorException.class, () -> service().bloquear(id));
+                assertThrows(UltimoAdministradorException.class, () -> service().bloquear(id, null));
 
         assertEquals(MENSAGEM, exception.getMessage());
     }

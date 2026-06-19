@@ -6,6 +6,8 @@ import jakarta.persistence.LockModeType;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -30,4 +32,17 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
             order by u.id
             """)
     List<Usuario> findAllAtivosByRoleForUpdate(@Param("role") Role role);
+
+    @Query("""
+            select u from Usuario u
+            where (:role is null or u.role = :role)
+              and (:ativo is null or u.ativo = :ativo)
+              and (:loginBloqueado is null or u.loginBloqueado = :loginBloqueado)
+            """)
+    Page<Usuario> findComFiltros(
+            @Param("role") Role role,
+            @Param("ativo") Boolean ativo,
+            @Param("loginBloqueado") Boolean loginBloqueado,
+            Pageable pageable
+    );
 }

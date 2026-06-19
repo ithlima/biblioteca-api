@@ -59,6 +59,9 @@ public class Usuario {
     @Column(nullable = false, updatable = false)
     private LocalDateTime criadoEm;
 
+    @Column(length = 500)
+    private String motivoBloqueio;
+
     @PrePersist
     void prePersist() {
         if (role == null) {

@@ -34,42 +34,16 @@ public class LivroService {
     private final CategoriaService categoriaService;
 
     @Transactional(readOnly = true)
-    public Page<Object> listar(UUID categoriaId, Boolean disponivel, Pageable pageable, Authentication authentication) {
-        if (isAdmin(authentication)) {
-            if (disponivel != null) {
-                if (disponivel) {
-                    if (categoriaId != null) return livroRepository.findByQuantidadeGreaterThanAndCategoriasId(0, categoriaId, pageable).map(livro -> LivroResponse.from(livro, contarEmprestados(livro.getId())));
-                    return livroRepository.findByQuantidadeGreaterThan(0, pageable).map(livro -> LivroResponse.from(livro, contarEmprestados(livro.getId())));
-                } else {
-                    if (categoriaId != null) return livroRepository.findByQuantidadeLessThanEqualAndCategoriasId(0, categoriaId, pageable).map(livro -> LivroResponse.from(livro, contarEmprestados(livro.getId())));
-                    return livroRepository.findByQuantidadeLessThanEqual(0, pageable).map(livro -> LivroResponse.from(livro, contarEmprestados(livro.getId())));
-                }
-            }
-
-            if (categoriaId != null) {
-                return livroRepository.findByCategoriasId(categoriaId, pageable)
-                        .map(livro -> LivroResponse.from(livro, contarEmprestados(livro.getId())));
-            }
-            return livroRepository.findAll(pageable)
-                    .map(livro -> LivroResponse.from(livro, contarEmprestados(livro.getId())));
-        }
-
-        if (disponivel != null) {
-            if (disponivel) {
-                if (categoriaId != null) return livroRepository.findByOcultoFalseAndQuantidadeGreaterThanAndCategoriasId(0, categoriaId, pageable).map(livro -> LivroCatalogoResponse.from(livro, contarEmprestados(livro.getId())));
-                return livroRepository.findByOcultoFalseAndQuantidadeGreaterThan(0, pageable).map(livro -> LivroCatalogoResponse.from(livro, contarEmprestados(livro.getId())));
-            } else {
-                if (categoriaId != null) return livroRepository.findByOcultoFalseAndQuantidadeLessThanEqualAndCategoriasId(0, categoriaId, pageable).map(livro -> LivroCatalogoResponse.from(livro, contarEmprestados(livro.getId())));
-                return livroRepository.findByOcultoFalseAndQuantidadeLessThanEqual(0, pageable).map(livro -> LivroCatalogoResponse.from(livro, contarEmprestados(livro.getId())));
-            }
-        }
-
-        if (categoriaId != null) {
-            return livroRepository.findByOcultoFalseAndCategoriasId(categoriaId, pageable)
-                    .map(livro -> LivroCatalogoResponse.from(livro, contarEmprestados(livro.getId())));
-        }
-        return livroRepository.findByOcultoFalse(pageable)
-                .map(livro -> LivroCatalogoResponse.from(livro, contarEmprestados(livro.getId())));
+    public Page<Object> listar(UUID categoriaId, Boolean disponivel, Boolean oculto, Pageable pageable, Authentication authentication) {
+        Boolean filtroOculto = isAdmin(authentication) ? oculto : false;
+        return livroRepository.findComFiltros(categoriaId, disponivel, filtroOculto, pageable)
+                .map(livro -> {
+                    if (isAdmin(authentication)) {
+                        return LivroResponse.from(livro, contarEmprestados(livro.getId()));
+                    } else {
+                        return LivroCatalogoResponse.from(livro, contarEmprestados(livro.getId()));
+                    }
+                });
     }
 
     @Transactional(readOnly = true)
