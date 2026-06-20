@@ -61,12 +61,13 @@ public class LivroService {
     @Transactional
     public LivroResponse criar(LivroRequest request, Authentication authentication) {
         Usuario admin = usuarioService.usuarioAutenticado(authentication);
-        validarLivroDuplicado(request, null);
+        String volumeTratado = getVolumeTratado(request.volume());
+        validarLivroDuplicado(request, volumeTratado, null);
         Livro livro = Livro.builder()
                 .nomeObra(request.nomeObra())
                 .autor(request.autor())
                 .editora(request.editora())
-                .volume(request.volume())
+                .volume(volumeTratado)
                 .descricao(request.descricao())
                 .categorias(categoriaService.buscarEntidades(request.categoriasIds()))
                 .quantidade(request.quantidade())
@@ -81,11 +82,12 @@ public class LivroService {
     public LivroResponse atualizar(UUID id, LivroRequest request, Authentication authentication) {
         Usuario admin = usuarioService.usuarioAutenticado(authentication);
         Livro livro = buscarEntidade(id);
-        validarLivroDuplicado(request, id);
+        String volumeTratado = getVolumeTratado(request.volume());
+        validarLivroDuplicado(request, volumeTratado, id);
         livro.setNomeObra(request.nomeObra());
         livro.setAutor(request.autor());
         livro.setEditora(request.editora());
-        livro.setVolume(request.volume());
+        livro.setVolume(volumeTratado);
         livro.setDescricao(request.descricao());
         livro.setCategorias(categoriaService.buscarEntidades(request.categoriasIds()));
         livro.setQuantidade(request.quantidade());
@@ -145,15 +147,22 @@ public class LivroService {
                 .anyMatch(authority -> authority.getAuthority().equals("ROLE_" + Role.ADMIN.name()));
     }
 
-    private void validarLivroDuplicado(LivroRequest request, UUID idAtual) {
+    private void validarLivroDuplicado(LivroRequest request, String volumeTratado, UUID idAtual) {
         boolean duplicado = idAtual == null
                 ? livroRepository.existsDuplicado(
-                request.nomeObra(), request.autor(), request.editora(), request.volume())
+                request.nomeObra(), request.autor(), request.editora(), volumeTratado)
                 : livroRepository.existsDuplicadoEmOutroLivro(
-                request.nomeObra(), request.autor(), request.editora(), request.volume(), idAtual);
+                request.nomeObra(), request.autor(), request.editora(), volumeTratado, idAtual);
 
         if (duplicado) {
             throw new ConflictException("Já existe livro cadastrado com mesma obra, autor, editora e volume.");
         }
+    }
+
+    private String getVolumeTratado(String volume) {
+        if (volume == null || volume.trim().isEmpty()) {
+            return "Volume único";
+        }
+        return "Vol. " + volume.trim();
     }
 }

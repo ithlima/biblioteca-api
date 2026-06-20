@@ -10,9 +10,13 @@ import java.util.UUID;
 public record LivroRequest(
         @NotBlank String nomeObra,
         @NotBlank String autor,
-        String editora,
+        @NotBlank(message = "A editora não pode estar em branco") String editora,
+        @Pattern(
+                regexp = "^\\d*$",
+                message = "O volume deve conter apenas números."
+        )
         String volume,
-        String descricao,
+        @NotBlank(message = "A descrição não pode estar em branco") String descricao,
         List<UUID> categoriasIds,
         @NotNull @Min(0) Integer quantidade,
         @Pattern(
