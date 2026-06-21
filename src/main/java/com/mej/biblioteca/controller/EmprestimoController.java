@@ -47,6 +47,11 @@ public class EmprestimoController {
         return emprestimoService.renovar(id, authentication);
     }
 
+    @PatchMapping("/{id}/cancelar")
+    public EmprestimoResponse cancelar(@PathVariable UUID id, Authentication authentication) {
+        return emprestimoService.cancelar(id, authentication);
+    }
+
     @PatchMapping("/{id}/devolver")
     public EmprestimoResponse devolver(@PathVariable UUID id, Authentication authentication) {
         return emprestimoService.devolver(id, authentication);

@@ -166,6 +166,28 @@ public class EmprestimoService {
         return EmprestimoResponse.from(emprestimo);
     }
 
+    @Transactional
+    public EmprestimoResponse cancelar(UUID id, Authentication authentication) {
+        Emprestimo emprestimo = buscarEntidade(id);
+        Usuario usuario = usuarioService.usuarioAutenticado(authentication);
+        validarDonoOuAdmin(emprestimo, usuario);
+
+        if (emprestimo.getStatus() != StatusEmprestimo.SOLICITADO) {
+            throw new EmprestimoOperacaoInvalidaException("Somente solicitações pendentes podem ser canceladas.");
+        }
+
+        emprestimo.setStatus(StatusEmprestimo.CANCELADO);
+
+        emailService.enviarNotificacaoEmprestimo(
+                emprestimo.getLeitor().getEmail(),
+                "Cancelamento de Solicitação",
+                String.format("Prezado(a) %s,\n\nA solicitação de empréstimo do livro '%s' foi cancelada com sucesso.\n\nAtenciosamente,\nEquipe da Biblioteca",
+                        emprestimo.getLeitor().getNomeCompleto(), emprestimo.getLivro().getNomeObra())
+        );
+
+        return EmprestimoResponse.from(emprestimo);
+    }
+
     @Transactional(readOnly = true)
     public EmprestimoResponse obterAtual(Authentication authentication) {
         Usuario leitor = usuarioService.usuarioAutenticado(authentication);
