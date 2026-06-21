@@ -76,7 +76,7 @@ public class EmprestimoService {
         emailService.enviarNotificacaoEmprestimo(
                 leitor.getEmail(),
                 "Confirmação de Solicitação de Empréstimo",
-                String.format("Olá %s,\n\nSua solicitação para o livro '%s' foi realizada com sucesso!\nAguarde a liberação por um administrador.",
+                String.format("Prezado(a) %s,\n\nRecebemos com alegria a sua solicitação para o empréstimo do livro '%s'.\nSua reserva foi registrada com sucesso e encontra-se em análise por nossa equipe.\n\nFique de olho em seu e-mail, pois avisaremos assim que a retirada for liberada.\n\nAtenciosamente,\nEquipe da Biblioteca",
                         leitor.getNomeCompleto(), livro.getNomeObra())
         );
 
@@ -105,7 +105,7 @@ public class EmprestimoService {
         emailService.enviarNotificacaoEmprestimo(
                 emprestimo.getLeitor().getEmail(),
                 "Empréstimo de Livro Efetivado",
-                String.format("Olá %s,\n\nO empréstimo do livro '%s' foi efetivado com sucesso!\nSua data limite para devolução é: %s",
+                String.format("Prezado(a) %s,\n\nÉ com grande satisfação que informamos a liberação do livro '%s' para empréstimo!\nEsperamos que a leitura seja muito proveitosa e enriquecedora.\n\nLembramos gentilmente que a data limite para devolução é: %s.\n\nAtenciosamente,\nEquipe da Biblioteca",
                         emprestimo.getLeitor().getNomeCompleto(), livro.getNomeObra(), emprestimo.getDataDevolucaoPrevista().toString())
         );
 
@@ -134,7 +134,7 @@ public class EmprestimoService {
         emailService.enviarNotificacaoEmprestimo(
                 usuario.getEmail(),
                 "Renovação de Empréstimo",
-                String.format("Olá %s,\n\nO prazo de empréstimo do livro '%s' foi renovado com sucesso!\nSua nova data limite para devolução é: %s",
+                String.format("Prezado(a) %s,\n\nInformamos que o prazo de devolução do livro '%s' foi renovado com sucesso.\nQue bom que você está aproveitando a leitura!\n\nSua nova data limite para devolução é: %s.\n\nAtenciosamente,\nEquipe da Biblioteca",
                         usuario.getNomeCompleto(), emprestimo.getLivro().getNomeObra(), emprestimo.getDataDevolucaoPrevista().toString())
         );
 
@@ -159,7 +159,7 @@ public class EmprestimoService {
         emailService.enviarNotificacaoEmprestimo(
                 emprestimo.getLeitor().getEmail(),
                 "Confirmação de Devolução",
-                String.format("Olá %s,\n\nA devolução do livro '%s' foi confirmada com sucesso pelo administrador!\nMuito obrigado.",
+                String.format("Prezado(a) %s,\n\nConfirmamos o recebimento e a devolução do livro '%s'.\n\nAgradecemos imensamente pelo cuidado com a obra e por cumprir com os prazos. Estaremos sempre de portas abertas para sua próxima leitura!\n\nAtenciosamente,\nEquipe da Biblioteca",
                         emprestimo.getLeitor().getNomeCompleto(), livro.getNomeObra())
         );
 
