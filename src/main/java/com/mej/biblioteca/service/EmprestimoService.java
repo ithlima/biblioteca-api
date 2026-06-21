@@ -44,6 +44,7 @@ public class EmprestimoService {
     private final PenalidadeRepository penalidadeRepository;
     private final LivroService livroService;
     private final UsuarioService usuarioService;
+    private final EmailService emailService;
 
     @Transactional
     public EmprestimoResponse solicitar(EmprestimoSolicitarRequest request, Authentication authentication) {
@@ -70,7 +71,16 @@ public class EmprestimoService {
                 .quantidadeRenovacoes(0)
                 .build();
 
-        return EmprestimoResponse.from(emprestimoRepository.save(emprestimo));
+        Emprestimo salvo = emprestimoRepository.save(emprestimo);
+
+        emailService.enviarNotificacaoEmprestimo(
+                leitor.getEmail(),
+                "Confirmação de Solicitação de Empréstimo",
+                String.format("Olá %s,\n\nSua solicitação para o livro '%s' foi realizada com sucesso!\nAguarde a liberação por um administrador.",
+                        leitor.getNomeCompleto(), livro.getNomeObra())
+        );
+
+        return EmprestimoResponse.from(salvo);
     }
 
     @Transactional
@@ -91,6 +101,13 @@ public class EmprestimoService {
         emprestimo.setStatus(StatusEmprestimo.EMPRESTADO);
         emprestimo.setDataEmprestimo(dataEmprestimo);
         emprestimo.setDataDevolucaoPrevista(dataEmprestimo.plusDays(PRAZO_EMPRESTIMO_DIAS));
+
+        emailService.enviarNotificacaoEmprestimo(
+                emprestimo.getLeitor().getEmail(),
+                "Empréstimo de Livro Efetivado",
+                String.format("Olá %s,\n\nO empréstimo do livro '%s' foi efetivado com sucesso!\nSua data limite para devolução é: %s",
+                        emprestimo.getLeitor().getNomeCompleto(), livro.getNomeObra(), emprestimo.getDataDevolucaoPrevista().toString())
+        );
 
         return EmprestimoResponse.from(emprestimo);
     }
@@ -113,6 +130,14 @@ public class EmprestimoService {
 
         emprestimo.setQuantidadeRenovacoes(emprestimo.getQuantidadeRenovacoes() + 1);
         emprestimo.setDataDevolucaoPrevista(emprestimo.getDataDevolucaoPrevista().plusDays(PRAZO_EMPRESTIMO_DIAS));
+        
+        emailService.enviarNotificacaoEmprestimo(
+                usuario.getEmail(),
+                "Renovação de Empréstimo",
+                String.format("Olá %s,\n\nO prazo de empréstimo do livro '%s' foi renovado com sucesso!\nSua nova data limite para devolução é: %s",
+                        usuario.getNomeCompleto(), emprestimo.getLivro().getNomeObra(), emprestimo.getDataDevolucaoPrevista().toString())
+        );
+
         return EmprestimoResponse.from(emprestimo);
     }
 
@@ -130,6 +155,14 @@ public class EmprestimoService {
         livro.setQuantidade(livro.getQuantidade() + 1);
         emprestimo.setStatus(StatusEmprestimo.DEVOLVIDO);
         emprestimo.setDataDevolucaoReal(LocalDate.now());
+
+        emailService.enviarNotificacaoEmprestimo(
+                emprestimo.getLeitor().getEmail(),
+                "Confirmação de Devolução",
+                String.format("Olá %s,\n\nA devolução do livro '%s' foi confirmada com sucesso pelo administrador!\nMuito obrigado.",
+                        emprestimo.getLeitor().getNomeCompleto(), livro.getNomeObra())
+        );
+
         return EmprestimoResponse.from(emprestimo);
     }
 

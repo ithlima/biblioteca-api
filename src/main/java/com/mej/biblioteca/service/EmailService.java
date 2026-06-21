@@ -23,6 +23,42 @@ public class EmailService {
     @Value("${spring.mail.username:no-reply@biblioteca-mej.local}")
     private String remetente;
 
+    public void enviarNotificacaoEmprestimo(String destinatario, String assunto, String corpoMensagem) {
+        if (!mailEnabled) {
+            log.info("Envio de e-mail desabilitado. Notificacao gerada para destinatário={}, assunto={}.",
+                    mascararEmail(destinatario), assunto);
+            return;
+        }
+
+        JavaMailSender mailSender = mailSenderProvider.getIfAvailable();
+        if (mailSender == null) {
+            throw new EmailEnvioException("Envio de e-mail habilitado, mas o SMTP não está configurado.");
+        }
+
+        SimpleMailMessage mensagem = new SimpleMailMessage();
+        mensagem.setFrom(remetente);
+        mensagem.setTo(destinatario);
+        mensagem.setSubject(assunto);
+        mensagem.setText(corpoMensagem);
+
+        log.info("""
+
+
+                =======================================================
+                 NOTIFICAÇÃO (MOCK/SMTP)
+                 Destinatário: {}
+                 Assunto: {}
+                =======================================================
+                """, destinatario, assunto);
+
+        try {
+            mailSender.send(mensagem);
+            log.info("Notificação enviada para destinatário={}.", mascararEmail(destinatario));
+        } catch (MailException exception) {
+            log.warn("Falha ao enviar notificação real pelo SMTP para {}.", mascararEmail(destinatario));
+        }
+    }
+
     public void enviarCodigoVerificacao(String destinatario, String assunto, String codigo) {
         if (!mailEnabled) {
             log.info("Envio de e-mail desabilitado. Código gerado para destinatário={}, assunto={}.",
