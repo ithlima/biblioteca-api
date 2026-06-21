@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Pattern;
 public record AuthCadastroRequest(
         @NotBlank String nomeCompleto,
         @NotBlank @Email String email,
+        @NotBlank(message = "O número de WhatsApp é obrigatório.")
         String telefoneWhatsapp,
         @NotBlank
         @Pattern(
