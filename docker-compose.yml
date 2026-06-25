@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   mysql:
     image: mysql:8.0
@@ -24,6 +22,45 @@ services:
       - sonarqube_data:/opt/sonarqube/data
       - sonarqube_extensions:/opt/sonarqube/extensions
       - sonarqube_logs:/opt/sonarqube/logs
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend-biblioteca
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - SERVER_PORT=8080
+      - DATABASE_URL=jdbc:mysql://mysql:3306/biblioteca?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Sao_Paulo
+      - DATABASE_USERNAME=root
+      - DATABASE_PASSWORD=root123
+      - JWT_SECRET=umasenhamuitolongaeseguraparaojwtaquibibliotecaapi
+      - JWT_EXPIRATION=86400000
+      - CORS_ALLOWED_ORIGINS=http://localhost
+      - APP_MAIL_ENABLED=true
+      - SPRING_MAIL_HOST=smtp.gmail.com
+      - SPRING_MAIL_PORT=587
+      - SPRING_MAIL_USERNAME=bibliotecamej.projeto@gmail.com
+      - SPRING_MAIL_PASSWORD=hgmb ntfm nkfs kdgm
+      - SPRING_MAIL_SMTP_AUTH=true
+      - SPRING_MAIL_SMTP_STARTTLS_ENABLE=true
+      - ADMIN_EMAIL=admin@biblioteca.com
+      - ADMIN_PASSWORD=Admin@123p
+    depends_on:
+      - mysql
+
+  frontend:
+    build:
+      context: ../biblioteca-mej-main/biblioteca-mej-main
+      dockerfile: Dockerfile
+    container_name: frontend-biblioteca
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
 
 volumes:
   mysql_data:
